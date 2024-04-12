@@ -1,4 +1,4 @@
 [submodule "engine"]
 	path = engine
-	url = https://github.com/Nimac0/SDL_Minigame.git
+	url = https://github.com/VEGO-Engine/Engine.git
 	branch = separation-refractor
