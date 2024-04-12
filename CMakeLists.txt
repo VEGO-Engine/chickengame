@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.15)
 
-project(chicken_game)
+project(my_game)
 
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -26,7 +26,9 @@ if(CMAKE_BUILD_TYPE MATCHES "Debug")
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g")
 endif()
 
-file(COPY ${PROJECT_SOURCE_DIR}/assets DESTINATION ${PROJECT_BINARY_DIR})
+if(EXISTS ${PROJECT_SOURCE_DIR}/assets)
+    file(COPY ${PROJECT_SOURCE_DIR}/assets DESTINATION ${PROJECT_BINARY_DIR})
+endif()
 
 # link/copy compile commands to root dir
 file(CREATE_LINK

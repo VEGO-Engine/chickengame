@@ -2,17 +2,17 @@
 
 #include "../engine/include/Game.h"
 
-void chickengame::init()
+void my_game::init()
 {
 	std::cout << "INIT!" << std::endl; 
 }
 
-void chickengame::update()
+void my_game::update()
 {
 	std::cout << "UPDATE!" << std::endl;
 }
 
 namespace engine {
-	gamefunction init = chickengame::init;
-	gamefunction update = chickengame::update;
+	gamefunction init = my_game::init;
+	gamefunction update = my_game::update;
 }
