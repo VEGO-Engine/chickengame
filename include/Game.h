@@ -1,6 +1,6 @@
 #pragma once
 
-namespace my_game {
+namespace chickengame {
 	void init();
 	void update();
 }
