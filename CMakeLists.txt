@@ -19,6 +19,7 @@ add_subdirectory(engine)
 target_include_directories(${PROJECT_NAME} PRIVATE ${PROJECT_INCLUDE_DIR})
 
 target_link_libraries(${PROJECT_NAME} PRIVATE
+    SDL2::SDL2main # this fixes compilation issues on windows... but why?
     engine
 )
 
@@ -31,8 +32,10 @@ if(EXISTS ${PROJECT_SOURCE_DIR}/assets)
 endif()
 
 # link/copy compile commands to root dir
-file(CREATE_LINK
-    ${PROJECT_BINARY_DIR}/compile_commands.json
-    ${PROJECT_SOURCE_DIR}/compile_commands.json
-    COPY_ON_ERROR SYMBOLIC
-)
+if(EXISTS ${PROJECT_BINARY_DIR}/compile_commands.json)
+    file(CREATE_LINK
+        ${PROJECT_BINARY_DIR}/compile_commands.json
+        ${PROJECT_SOURCE_DIR}/compile_commands.json
+        COPY_ON_ERROR SYMBOLIC
+    )
+endif()
