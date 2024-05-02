@@ -1,14 +1,18 @@
 #include "Chickengame.h"
 
 #include "Pickupables.h"
+#include "TextureDict.h"
 
 #include <iostream>
+#include <map>
 #include <Game.h>
 #include <AssetManager.h>
 #include <HealthComponent.h>
+#include <Map.h>
 
 void chickengame::init()
 {
+	engine::game->map->loadMap("assets/SDL_map_test.txt", 25, 20, engine::game, &(chickengame::tiles::tileDictionary));
 	std::cout << "INIT!" << std::endl; 
 }
 
@@ -23,8 +27,8 @@ void chickengame::update()
 		// gen rand tuple
 		engine::game->assets->createPowerup(
 			engine::game->assets->calculateSpawnPosition(),
-			std::get<0>(pickupable), // tuple[0]
-			std::get<1>(pickupable) // tuple[1]
+			std::get<0>(pickupable), // tuple[0] function
+			std::get<1>(pickupable) // tuple[1] texture
 		);
 	}
 
