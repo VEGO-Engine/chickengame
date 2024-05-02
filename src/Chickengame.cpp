@@ -13,7 +13,6 @@
 void chickengame::init()
 {
 	engine::game->map->loadMap("assets/SDL_map_test.txt", 25, 20, engine::game, &(chickengame::tiles::tileDictionary));
-	std::cout << "INIT!" << std::endl; 
 }
 
 void chickengame::update()

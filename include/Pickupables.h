@@ -8,6 +8,9 @@ namespace chickengame
 {
     namespace pickupables
     {
+        constexpr int BUFF_DURATION = 240;
+        constexpr int BUFF_VALUE = 1;
+
         void heartEffect(Entity* player);
         void movementSpeedEffect(Entity* player);
         void atkSpeedEffect(Entity* player);
