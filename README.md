@@ -1,6 +1,7 @@
 ## Introduction
 
 *How and when to use*
+
 *Template not required, just an example*
 
 ### Getting Started
