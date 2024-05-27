@@ -4,20 +4,28 @@
 #include "TextureDict.h"
 
 #include <iostream>
+#include <vector>
 #include <map>
 #include <Game.h>
 #include <AssetManager.h>
 #include <HealthComponent.h>
+#include <InputComponent.h>
 #include <Map.h>
 
 void chickengame::init()
 {
 	engine::game->map->loadMap("assets/SDL_map_test.txt", 25, 20, engine::game, &(chickengame::tiles::tileDictionary));
-	std::cout << "INIT!" << std::endl; 
+
+	std::vector<Entity*>& players = engine::game->manager.getGroup((size_t) Entity::GroupLabel::PLAYERS);
+	playerControllerA = new KeyboardController(&players[0]->getComponent<InputComponent>(), Key::W, Key::S, Key::A, Key::D, Key::E, Vector2D(2, 0));
+	playerControllerB = new KeyboardController(&players[1]->getComponent<InputComponent>(), Key::UP, Key::DOWN, Key::LEFT, Key::RIGHT, Key::RIGHT_CTRL, Vector2D(-2, 0));
 }
 
 void chickengame::update()
 {
+	playerControllerA->processMovement();
+	playerControllerB->processMovement();
+
 	int powerupSpawn = rand() % 500;
 
 	if (powerupSpawn == 0)
@@ -33,8 +41,10 @@ void chickengame::update()
 	}
 
 	// needs to be in game.cpp to have access to internal functions
-	for (auto& player : engine::game->manager.getGroup((size_t) Entity::GroupLabel::PLAYERS)) {
-		if (player->getComponent<HealthComponent>().getHealth() <= 0) {
+	for (auto& player : engine::game->manager.getGroup((size_t) Entity::GroupLabel::PLAYERS))
+	{
+		if (player->getComponent<HealthComponent>().getHealth() <= 0)
+		{
 			engine::game->setWinner(player->getTeam());
 		}
 	}
