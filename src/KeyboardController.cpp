@@ -6,7 +6,7 @@
 #include "TransformComponent.h"
 
 KeyboardController::KeyboardController(InputComponent* input, Key up, Key down, Key left, Key right, Key fire, Vector2D fireVelocity)
-    : m_input(input), m_up(up), m_down(down), m_left(left), m_right(right), m_fire(fire)
+    : m_input(input), m_up(up), m_down(down), m_left(left), m_right(right), m_fire(fire), m_fireVelocity(fireVelocity)
 {
 	m_sprite = &m_input->entity->getComponent<SpriteComponent>();
 	m_transform = &m_input->entity->getComponent<TransformComponent>();

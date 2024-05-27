@@ -15,11 +15,8 @@ void chickengame::init()
 	std::cout << "INIT!" << std::endl;
 
 	std::vector<Entity*>& players = engine::game->manager.getGroup((size_t) Entity::GroupLabel::PLAYERS);
-	std::cout << "getting players succeeded" << std::endl;
-	std::cout << players.size() << std::endl;
-
 	playerControllerA = new KeyboardController(&players[0]->getComponent<InputComponent>(), Key::W, Key::S, Key::A, Key::D, Key::E, Vector2D(2, 0));
-	playerControllerB = new KeyboardController(&players[1]->getComponent<InputComponent>(), Key::UP, Key::DOWN, Key::LEFT, Key::RIGHT, Key::LEFT_CTRL, Vector2D(-2, 0));
+	playerControllerB = new KeyboardController(&players[1]->getComponent<InputComponent>(), Key::UP, Key::DOWN, Key::LEFT, Key::RIGHT, Key::RIGHT_CTRL, Vector2D(-2, 0));
 }
 
 void chickengame::update()
