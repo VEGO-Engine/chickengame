@@ -1,6 +1,6 @@
 #include "KeyboardController.h"
 
-#include "Game.h"
+#include "GameInternal.h"
 #include "AssetManager.h"
 #include "SpriteComponent.h"
 #include "TransformComponent.h"

@@ -6,7 +6,7 @@
 #include <iostream>
 #include <vector>
 #include <map>
-#include <Game.h>
+#include <GameInternal.h>
 #include <AssetManager.h>
 #include <HealthComponent.h>
 #include <InputComponent.h>
