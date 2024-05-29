@@ -1,12 +1,17 @@
 #pragma once
 
 #include "KeyboardController.h"
+#include <Game.h>
 
 namespace chickengame
 {
-	void init();
-	void update();
+	class GameImplementation : public Game { // name pending
+		void init() override;
+		void update() override;
+	};
 
 	KeyboardController* playerControllerA;
 	KeyboardController* playerControllerB;
-}
+
+	REGISTER_GAME(GameImplementation);
+};
