@@ -2,6 +2,7 @@
 
 #include "KeyboardController.h"
 #include <Game.h>
+#include <GameRegistryHelper.h>
 
 namespace chickengame
 {
@@ -12,6 +13,4 @@ namespace chickengame
 
 	KeyboardController* playerControllerA;
 	KeyboardController* playerControllerB;
-
-	REGISTER_GAME(GameImplementation);
 };
