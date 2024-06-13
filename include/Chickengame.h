@@ -7,10 +7,13 @@
 namespace chickengame
 {
 	class GameImplementation : public Game { // name pending
+	public:
 		void init() override;
 		void update() override;
-	};
+        void selectCharacters(const char* &playerSprite, const char* &enemySprite);
 
-	KeyboardController* playerControllerA;
-	KeyboardController* playerControllerB;
+	private:
+		KeyboardController* playerControllerA;
+		KeyboardController* playerControllerB;
+	};
 };

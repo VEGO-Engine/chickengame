@@ -22,12 +22,12 @@ void KeyboardController::processMovement()
 {
 	m_transform->direction.x = 0;
 	m_transform->direction.y = 0;
-	m_sprite->playAnimation(IDLE);
+	m_sprite->playAnimation("IDLE");
 
 	if (m_input->isKeyDown(m_left))
 	{
 		m_transform->direction.x = -1;
-		m_sprite->playAnimation(WALK);
+		m_sprite->playAnimation("WALK");
 		m_sprite->setDirection(Direction::LEFT);
 		SoundManager::playSound(m_input->entity->getManager().getGame(), STEPS);
 	}
@@ -35,7 +35,7 @@ void KeyboardController::processMovement()
 	if (m_input->isKeyDown(m_right))
 	{
 		m_transform->direction.x = 1;
-		m_sprite->playAnimation(WALK);
+		m_sprite->playAnimation("WALK");
 		m_sprite->setDirection(Direction::RIGHT);
 		SoundManager::playSound(m_input->entity->getManager().getGame(), STEPS);
 	}
@@ -43,14 +43,14 @@ void KeyboardController::processMovement()
 	if (m_input->isKeyDown(m_up))
 	{
 		m_transform->direction.y = -1;
-		m_sprite->playAnimation(WALK);
+		m_sprite->playAnimation("WALK");
 		SoundManager::playSound(m_input->entity->getManager().getGame(), STEPS);
 	}
 
 	if (m_input->isKeyDown(m_down))
 	{
 		m_transform->direction.y = 1;
-		m_sprite->playAnimation(WALK);
+		m_sprite->playAnimation("WALK");
 		SoundManager::playSound(m_input->entity->getManager().getGame(), STEPS);
 	}
 
