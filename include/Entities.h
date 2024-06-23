@@ -27,7 +27,8 @@ namespace chickengame::entities
         player1.setTeam(Entity::TeamLabel::BLUE);
         player1.addComponent<TransformComponent>(80,80,2); //posx, posy, scale
         player1.addComponent<SpriteComponent>(player1Sprite, true, &chickengame::animation::animationMap, "IDLE"); //adds sprite (32x32px), path needed
-        player1.addComponent<InputComponent>();
+        // player1.addComponent<InputComponent>();
+        player1.addComponent<InputSystemComponent>();
         player1.addComponent<ColliderComponent>("player", 0.8f); //ad, chickengame::animation::animationMap, "IDLE"ds tag (for further use, reference tag)
         player1.addComponent<HealthComponent>(5, Direction::LEFT, "assets/heart.png");
         player1.addComponent<StatEffectsComponent>();
@@ -37,7 +38,8 @@ namespace chickengame::entities
         player2.setTeam(Entity::TeamLabel::RED);
         player2.addComponent<TransformComponent>(600, 500, 2);
         player2.addComponent<SpriteComponent>(player2Sprite, true, &chickengame::animation::animationMap, "IDLE");
-        player2.addComponent<InputComponent>();
+        // player2.addComponent<InputComponent>();
+        player2.addComponent<InputSystemComponent>();
         player2.addComponent<ColliderComponent>("enemy", 0.8f);
         player2.addComponent<HealthComponent>(5, Direction::RIGHT, "assets/heart.png");
         player2.addComponent<StatEffectsComponent>();

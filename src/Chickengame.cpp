@@ -23,15 +23,16 @@ void chickengame::GameImplementation::init()
 	chickengame::entities::initialize(this);
 
 	std::vector<Entity*>& players = this->gameInternal->manager.getGroup((size_t) Entity::GroupLabel::PLAYERS);
-	playerControllerA = new KeyboardController(&players[0]->getComponent<InputComponent>(), Key::W, Key::S, Key::A, Key::D, Key::E, Vector2D(2, 0));
-	playerControllerB = new KeyboardController(&players[1]->getComponent<InputComponent>(), Key::UP, Key::DOWN, Key::LEFT, Key::RIGHT, Key::RIGHT_CTRL, Vector2D(-2, 0));
+	
+	playerControllerA = std::make_unique<KeyboardController>(&players[0]->getComponent<InputSystemComponent>(), Key::W, Key::S, Key::A, Key::D, Key::E, Vector2D(2, 0));
+	playerControllerB = std::make_unique<KeyboardController>(&players[1]->getComponent<InputSystemComponent>(), Key::UP, Key::DOWN, Key::LEFT, Key::RIGHT, Key::RIGHT_CTRL, Vector2D(-2, 0));
+	
+	playerControllerA->idle();
+	playerControllerB->idle();
 }
 
 void chickengame::GameImplementation::update()
 {
-	playerControllerA->processMovement();
-	playerControllerB->processMovement();
-
 	int powerupSpawn = rand() % 500;
 
 	if (powerupSpawn == 0)

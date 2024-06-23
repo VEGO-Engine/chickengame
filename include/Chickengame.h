@@ -1,8 +1,10 @@
 #pragma once
 
-#include "KeyboardController.h"
 #include <Game.h>
 #include <GameRegistryHelper.h>
+#include <memory>
+
+#include "KeyboardController.h"
 
 namespace chickengame
 {
@@ -13,7 +15,7 @@ namespace chickengame
         void selectCharacters(const char* &playerSprite, const char* &enemySprite);
 
 	private:
-		KeyboardController* playerControllerA;
-		KeyboardController* playerControllerB;
+		std::unique_ptr<KeyboardController> playerControllerA;
+		std::unique_ptr<KeyboardController> playerControllerB;
 	};
 };
