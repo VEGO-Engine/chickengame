@@ -3,7 +3,6 @@
 #include "Pickupables.h"
 #include "TextureDict.h"
 #include "Animations.h"
-#include "Entities.h"
 
 #include <iostream>
 #include <vector>
@@ -19,8 +18,8 @@ vego::GameRegistryHelper<chickengame::GameImplementation> this_is_a_variable_so_
 void chickengame::GameImplementation::init()
 {
 	this->gameInternal->map->loadMap("assets/SDL_map_test.txt", 25, 20, this->gameInternal, &(chickengame::tiles::tileDictionary));
-	chickengame::animation::initialize();
-	chickengame::entities::initialize(this);
+	chickengame::animations::initialize();
+	Entities::getInstance().initialize(this);
 
 	std::vector<Entity*>& players = this->gameInternal->manager.getGroup((size_t) Entity::GroupLabel::PLAYERS);
 	playerControllerA = new KeyboardController(&players[0]->getComponent<InputComponent>(), Key::W, Key::S, Key::A, Key::D, Key::E, Vector2D(2, 0));
@@ -51,9 +50,20 @@ void chickengame::GameImplementation::update()
 	{
 		if (player->getComponent<HealthComponent>().getHealth() <= 0)
 		{
-			this->gameInternal->setWinner(player->getTeam());
+			this->setWinner(Entities::getInstance().getTeam(player));
 		}
 	}
+}
+
+void chickengame::GameImplementation::setWinner(Entities::TeamLabel winningTeam)
+{
+	this->winner = winningTeam;
+	this->gameInternal->stopGame();
+}
+
+chickengame::Entities::TeamLabel chickengame::GameImplementation::getWinner() const
+{
+    return this->winner;
 }
 
 void chickengame::GameImplementation::selectCharacters(const char* &playerSprite, const char* &enemySprite)
@@ -149,5 +159,5 @@ void chickengame::GameImplementation::selectCharacters(const char* &playerSprite
 
 	playerSprite = characterSprites.find(playerSelection)->second.second;
 	enemySprite = characterSprites.find(enemySelection)->second.second;
-	this->gameInternal->setRunning(true);
+	this->gameInternal->setRunning(true); // TODO: make wrapperfunction this shouldnt be accessed directly
 }
