@@ -22,6 +22,9 @@ void chickengame::GameImplementation::init()
 	chickengame::animation::initialize();
 	chickengame::entities::initialize(this);
 
+	this->gameInternal->assets->addSoundEffect("steps", "assets/sound/steps.wav");
+	this->gameInternal->assets->addSoundEffect("throw_egg", "assets/sound/throw_egg.wav");
+	
 	std::vector<Entity*>& players = this->gameInternal->manager.getGroup((size_t) Entity::GroupLabel::PLAYERS);
 	playerControllerA = new KeyboardController(&players[0]->getComponent<InputComponent>(), Key::W, Key::S, Key::A, Key::D, Key::E, Vector2D(2, 0));
 	playerControllerB = new KeyboardController(&players[1]->getComponent<InputComponent>(), Key::UP, Key::DOWN, Key::LEFT, Key::RIGHT, Key::RIGHT_CTRL, Vector2D(-2, 0));
