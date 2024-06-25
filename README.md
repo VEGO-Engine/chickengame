@@ -1,20 +1,27 @@
-## Introduction
+This game serves as a sample for using the [VEGO-Engine](https://github.com/VEGO-Engine/Engine).
 
-*How and when to use*
+### Usage
 
-*Template not required, just an example*
+The game compiles to an executable, for which the following prerequisites need to be met:
 
-### Getting Started
+- A C++ compiler, for example GCC
+  - On Windows you can use GCC via [MinGW](https://www.mingw-w64.org/)
+- CMake
 
-First, you need to make a copy of this repository. You can either fork it and continue from there, or change the remote later.
-Either way, first clone the repository. Assuming you are using a version of git newer or equal to `2.13`, you can use the following command:
+The game can then be cloned and compiled with the following commands:
+
 ```sh
-git clone --recurse-submodules -j8 [url]
-```
-Insert the clone url at `url`, removing the square brackets `[]`.
-From there you can test for compilation using the *(TODO)* compile script, or manually using the appropriate CMake commands found below. *(TODO: system dependend, link to setup scripts for environments)*
-```sh
+git clone --recurse-submodules -j8 https://github.com/VEGO-Engine/chickengame.git
 cmake -S . -B build
 cmake --build build
 ```
-The compiled executable can be found under `build/my_game`, adjust ending and path-separators depending on your system.
+
+Depending on the system, you might need to specify which generator to use, for example on a Windows system using MinGW:
+
+```sh
+git clone --recurse-submodules -j8 https://github.com/VEGO-Engine/chickengame.git
+cmake -S . -B build -G "MinGW Makefiles"
+cmake --build build
+```
+
+Compiling the whole game might take a while, since SDL and the engine also have to be compile first. Once it is done, the executable can be found in `build/chickengame.exe`
