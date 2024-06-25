@@ -65,6 +65,9 @@ namespace chickengame
 
         void initialize(GameImplementation* game);
 
+        Entity* getPlayer1() { return this->player1; };
+        Entity* getPlayer2() { return this->player2; };
+
     private:
         Entities() {}
 
@@ -74,5 +77,8 @@ namespace chickengame
         Entities& operator=(const Entities&) = delete;
 
         std::unordered_map<Entity*, Team> entityToTeam;
+
+        Entity* player1;
+        Entity* player2;
     };
 }

@@ -55,6 +55,9 @@ void chickengame::GameImplementation::update()
 			this->setWinner(Entities::getInstance().getTeam(player));
 		}
 	}
+
+	drawPlayerHealthUI(&chickengame::Entities::getInstance().getPlayer1()->getComponent<HealthComponent>(), this->heartElementsPlayerA, 10, 50);
+	drawPlayerHealthUI(&chickengame::Entities::getInstance().getPlayer2()->getComponent<HealthComponent>(), this->heartElementsPlayerB, 730, -50);
 }
 
 void chickengame::GameImplementation::setWinner(Entities::TeamLabel winningTeam)
@@ -161,4 +164,28 @@ void chickengame::GameImplementation::selectCharacters(const char* &playerSprite
 
 	playerSprite = characterSprites.find(playerSelection)->second.second;
 	enemySprite = characterSprites.find(enemySelection)->second.second;
+}
+
+void chickengame::GameImplementation::drawPlayerHealthUI(HealthComponent* playerHealthComponent, std::vector<Entity*>& heartElements, int startCoord, int offset)
+{
+	// clear hearts
+    for (auto& heart : heartElements) {
+        heart->destroy();
+    }
+	
+	heartElements.clear();
+
+    for(int i = 0; i < playerHealthComponent->getHealth(); i++) {
+        heartElements.emplace_back(createHeartComponents(startCoord));
+        startCoord += offset;
+    }
+}
+
+Entity* chickengame::GameImplementation::createHeartComponents(int locationX) const
+{
+    auto& heart(this->gameInternal->manager.addEntity());
+    heart.addComponent<TransformComponent>(locationX,5,2);
+    heart.addComponent<SpriteComponent>("assets/heart.png");
+    heart.addGroup((size_t)Entity::GroupLabel::HEARTS);
+	return &heart;
 }
