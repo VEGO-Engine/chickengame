@@ -45,7 +45,6 @@ void chickengame::GameImplementation::update()
 		);
 	}
 
-	// needs to be in game.cpp to have access to internal functions
 	for (auto& player : this->gameInternal->manager.getGroup((size_t) Entity::GroupLabel::PLAYERS))
 	{
 		if (player->getComponent<HealthComponent>().getHealth() <= 0)
@@ -153,11 +152,10 @@ void chickengame::GameImplementation::selectCharacters(const char* &playerSprite
 
 	if (hasQuit)
 	{
-		this->gameInternal->setRunning(false);
+		this->gameInternal->stopGame();
 		return;
 	}
 
 	playerSprite = characterSprites.find(playerSelection)->second.second;
 	enemySprite = characterSprites.find(enemySelection)->second.second;
-	this->gameInternal->setRunning(true); // TODO: make wrapperfunction this shouldnt be accessed directly
 }
