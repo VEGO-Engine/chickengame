@@ -61,6 +61,7 @@ void KeyboardController::processMovement()
 		if (currentTicks - m_lastFireTime >= m_fireCooldown)
 		{
 
+			// m_player is a missleading name for a component
 			m_player = &m_input->entity->getComponent<TransformComponent>();
 
 			//checks player source via the firing velocity
@@ -68,15 +69,29 @@ void KeyboardController::processMovement()
 			if (m_fireVelocity.x > 0)
 			{
 				m_sprite->setDirection(Direction::RIGHT);
-				m_input->entity->getManager().getGame()->assets->createProjectile(Vector2D(m_player->position.x, m_player->position.y), m_fireVelocity,
-					1, 180, 2, "assets/egg.png", m_input->entity->getTeam());
+				m_input->entity->getManager().getGame()->assets->createProjectile(
+					Vector2D(m_player->position.x, m_player->position.y),
+					m_fireVelocity,
+					1,
+					180,
+					2,
+					"assets/egg.png",
+					m_input->entity
+				);
 			}
 
 			else
 			{
 				m_sprite->setDirection(Direction::LEFT);
-				m_input->entity->getManager().getGame()->assets->createProjectile(Vector2D(m_player->position.x, m_player->position.y), m_fireVelocity,
-					1, 180, 2, "assets/egg.png", m_input->entity->getTeam());
+				m_input->entity->getManager().getGame()->assets->createProjectile(
+					Vector2D(m_player->position.x, m_player->position.y),
+					m_fireVelocity,
+					1,
+					180,
+					2,
+					"assets/egg.png",
+					m_input->entity
+				);
 			}
 
 			m_lastFireTime = currentTicks;

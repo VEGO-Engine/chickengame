@@ -1,46 +1,78 @@
 #pragma once
 
+#include <unordered_map>
+#include <vector> // Ensure vector is included for std::vector
+#include "Entity.h" // Ensure you have the correct include paths
+#include "Game.h"
+#include "GameInternal.h"
+#include "Manager.h"
+#include "SpriteComponent.h"
+#include "InputComponent.h"
+#include "StatEffectsComponent.h"
+#include "HealthComponent.h"
+#include "TransformComponent.h"
 #include "Animations.h"
 
-#include <Entity.h>
-#include <Game.h>
-#include <GameInternal.h>
-#include <Manager.h>
-#include <SpriteComponent.h>
-#include <InputComponent.h>
-#include <StatEffectsComponent.h>
-#include <HealthComponent.h>
-#include <TransformComponent.h>
-
-namespace chickengame::entities
+namespace chickengame
 {
-    void initialize(GameImplementation* game)
+    class GameImplementation;
+
+    using Team = std::size_t;
+
+    class Entities
     {
-        Entity& player1 = game->gameInternal->manager.addEntity();
-        Entity& player2 = game->gameInternal->manager.addEntity();
+    public:
+        enum class TeamLabel
+        {
+            NONE, //!< No team
+            BLUE, //!< Team blue
+            RED   //!< Team red
+        };
 
-        const char* player1Sprite;
-        const char* player2Sprite;
+        static Entities& getInstance()
+        {
+            static Entities instance;
+            return instance;
+        }
 
-        game->selectCharacters(player1Sprite, player2Sprite);
+        // Public methods
+        void setTeam(TeamLabel teamLabel, Entity* mEntity)
+        {
+            entityToTeam[mEntity] = static_cast<Team>(teamLabel);
+        }
 
-        player1.setTeam(Entity::TeamLabel::BLUE);
-        player1.addComponent<TransformComponent>(80,80,2); //posx, posy, scale
-        player1.addComponent<SpriteComponent>(player1Sprite, true, &chickengame::animation::animationMap, "IDLE"); //adds sprite (32x32px), path needed
-        player1.addComponent<InputComponent>();
-        player1.addComponent<ColliderComponent>("player", 0.8f); //ad, chickengame::animation::animationMap, "IDLE"ds tag (for further use, reference tag)
-        player1.addComponent<HealthComponent>(5, Direction::LEFT, "assets/heart.png");
-        player1.addComponent<StatEffectsComponent>();
-        player1.addGroup((size_t) Entity::GroupLabel::PLAYERS); //tell programm what group it belongs to for rendering order
+        TeamLabel getTeam(Entity* mEntity)
+        {
+            return static_cast<TeamLabel>(entityToTeam.at(mEntity));
+        }
 
+        void refreshTeams(Entity& mEntity)
+        {
+            std::vector<Entity*> entitiesToRemove;
+            
+            for (auto& entry : entityToTeam) {
+                Entity* entity = entry.first;
+                
+                if (!entity->isActive() || getTeam(entity) != static_cast<TeamLabel>(entry.second)) {
+                    entitiesToRemove.push_back(entity);
+                }
+            }
 
-        player2.setTeam(Entity::TeamLabel::RED);
-        player2.addComponent<TransformComponent>(600, 500, 2);
-        player2.addComponent<SpriteComponent>(player2Sprite, true, &chickengame::animation::animationMap, "IDLE");
-        player2.addComponent<InputComponent>();
-        player2.addComponent<ColliderComponent>("enemy", 0.8f);
-        player2.addComponent<HealthComponent>(5, Direction::RIGHT, "assets/heart.png");
-        player2.addComponent<StatEffectsComponent>();
-        player2.addGroup((size_t) Entity::GroupLabel::PLAYERS);
-    }
+            for (Entity* entity : entitiesToRemove) {
+                entityToTeam.erase(entity);
+            }
+        }
+
+        void initialize(GameImplementation* game);
+
+    private:
+        Entities() {}
+
+        ~Entities() {}
+
+        Entities(const Entities&) = delete;
+        Entities& operator=(const Entities&) = delete;
+
+        std::unordered_map<Entity*, Team> entityToTeam;
+    };
 }

@@ -3,7 +3,6 @@
 #include "Pickupables.h"
 #include "TextureDict.h"
 #include "Animations.h"
-#include "Entities.h"
 
 #include <iostream>
 #include <vector>
@@ -19,8 +18,8 @@ vego::GameRegistryHelper<chickengame::GameImplementation> this_is_a_variable_so_
 void chickengame::GameImplementation::init()
 {
 	this->gameInternal->map->loadMap("assets/SDL_map_test.txt", 25, 20, this->gameInternal, &(chickengame::tiles::tileDictionary));
-	chickengame::animation::initialize();
-	chickengame::entities::initialize(this);
+	chickengame::animations::initialize();
+	Entities::getInstance().initialize(this);
 
 	this->gameInternal->assets->addSoundEffect("steps", "assets/sound/steps.wav");
 	this->gameInternal->assets->addSoundEffect("throw_egg", "assets/sound/throw_egg.wav");
@@ -49,14 +48,24 @@ void chickengame::GameImplementation::update()
 		);
 	}
 
-	// needs to be in game.cpp to have access to internal functions
 	for (auto& player : this->gameInternal->manager.getGroup((size_t) Entity::GroupLabel::PLAYERS))
 	{
 		if (player->getComponent<HealthComponent>().getHealth() <= 0)
 		{
-			this->gameInternal->setWinner(player->getTeam());
+			this->setWinner(Entities::getInstance().getTeam(player));
 		}
 	}
+}
+
+void chickengame::GameImplementation::setWinner(Entities::TeamLabel winningTeam)
+{
+	this->winner = winningTeam;
+	this->gameInternal->stopGame();
+}
+
+chickengame::Entities::TeamLabel chickengame::GameImplementation::getWinner() const
+{
+    return this->winner;
 }
 
 void chickengame::GameImplementation::selectCharacters(const char* &playerSprite, const char* &enemySprite)
@@ -146,11 +155,10 @@ void chickengame::GameImplementation::selectCharacters(const char* &playerSprite
 
 	if (hasQuit)
 	{
-		this->gameInternal->setRunning(false);
+		this->gameInternal->stopGame();
 		return;
 	}
 
 	playerSprite = characterSprites.find(playerSelection)->second.second;
 	enemySprite = characterSprites.find(enemySelection)->second.second;
-	this->gameInternal->setRunning(true);
 }
