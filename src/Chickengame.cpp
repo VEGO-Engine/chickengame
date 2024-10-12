@@ -33,6 +33,20 @@ void chickengame::GameImplementation::init()
 
 void chickengame::GameImplementation::update()
 {
+	// im really sorry
+	std::vector<Entity*>& players = this->gameInternal->manager.getGroup((size_t) Entity::GroupLabel::PLAYERS);
+
+	if (shouldPlayerIdle(&players[0]->getComponent<InputSystemComponent>(), Key::W, Key::S, Key::A, Key::D))
+	{
+		playerControllerA->idle();
+	}
+
+	if (shouldPlayerIdle(&players[1]->getComponent<InputSystemComponent>(), Key::UP, Key::DOWN, Key::LEFT, Key::RIGHT))
+	{
+		playerControllerB->idle();
+	}
+
+
 	int powerupSpawn = rand() % 500;
 
 	if (powerupSpawn == 0)
@@ -151,4 +165,32 @@ void chickengame::GameImplementation::selectCharacters(const char* &playerSprite
 	playerSprite = characterSprites.find(playerSelection)->second.second;
 	enemySprite = characterSprites.find(enemySelection)->second.second;
 	this->gameInternal->setRunning(true);
+}
+
+// i am so sorry
+bool chickengame::GameImplementation::shouldPlayerIdle(InputSystemComponent* input, Key up, Key down, Key left, Key right)
+{
+	TransformComponent* transform = &input->entity->getComponent<TransformComponent>();
+
+	if (!input->isKeyDown(up) && transform->direction.y == -1)
+	{
+		return true;
+	}
+
+	if (!input->isKeyDown(down) && transform->direction.y == 1)
+	{
+		return true;
+	}
+
+	if (!input->isKeyDown(left) && transform->direction.x == -1)
+	{
+		return true;
+	}
+
+	if (!input->isKeyDown(right) && transform->direction.x == 1)
+	{
+		return true;
+	}
+
+	return false;
 }

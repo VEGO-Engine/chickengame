@@ -13,6 +13,7 @@ namespace chickengame
 		void init() override;
 		void update() override;
         void selectCharacters(const char* &playerSprite, const char* &enemySprite);
+		bool shouldPlayerIdle(InputSystemComponent* input, Key up, Key down, Key left, Key right);
 
 	private:
 		std::unique_ptr<KeyboardController> playerControllerA;
