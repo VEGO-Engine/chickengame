@@ -185,7 +185,7 @@ Entity* chickengame::GameImplementation::createHeartComponents(int locationX) co
 {
     auto& heart(this->gameInternal->manager.addEntity());
     heart.addComponent<TransformComponent>(locationX,5,2);
-    heart.addComponent<SpriteComponent>("assets/heart.png");
+    heart.addComponent<SpriteComponent>("assets/heart.png", 10);
     heart.addGroup((size_t)Entity::GroupLabel::HEARTS);
 	return &heart;
 }
