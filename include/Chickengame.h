@@ -15,6 +15,7 @@ namespace chickengame
 
 		void init() override;
 		void update() override;
+		void startScreen();
         void selectCharacters(const char* &playerSprite, const char* &enemySprite);
 		
 		Entities::TeamLabel getWinner() const;

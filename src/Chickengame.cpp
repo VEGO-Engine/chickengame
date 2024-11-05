@@ -1,6 +1,7 @@
 #include "Chickengame.h"
 
 #include "Pickupables.h"
+#include "SDL_render.h"
 #include "TextureDict.h"
 #include "Animations.h"
 
@@ -12,11 +13,14 @@
 #include <HealthComponent.h>
 #include <InputComponent.h>
 #include <Map.h>
+#include <VEGO.h>
 
 vego::GameRegistryHelper<chickengame::GameImplementation> this_is_a_variable_so_the_constructor_get_called_without_using_a_define_macro("Chickengame");
 
 void chickengame::GameImplementation::init()
 {
+	this->startScreen();
+
 	this->gameInternal->map->loadMap("assets/SDL_map_test.txt", 25, 20, this->gameInternal, &(chickengame::tiles::tileDictionary));
 	chickengame::animations::initialize();
 	Entities::getInstance().initialize(this);
@@ -69,6 +73,54 @@ void chickengame::GameImplementation::setWinner(Entities::TeamLabel winningTeam)
 chickengame::Entities::TeamLabel chickengame::GameImplementation::getWinner() const
 {
     return this->winner;
+}
+
+void chickengame::GameImplementation::startScreen()
+{
+	SDL_Texture* backgroundTexture = VEGO_Game().textureManager->loadTexture("assets/startscreen.png");
+	SDL_Renderer* renderer = VEGO_Game().renderer;
+
+	SDL_RenderClear(renderer);
+	SDL_RenderCopy(renderer, backgroundTexture, NULL, NULL);
+	SDL_RenderPresent(renderer);
+
+	//SDL_Event event;
+	bool hasQuit = false;
+
+	while (!hasQuit)
+	{
+		SDL_PollEvent(&(VEGO_Game().event));
+
+		if ((VEGO_Game().event).type == SDL_QUIT)
+		{
+			hasQuit = true;
+			break;
+		}
+
+		if ((VEGO_Game().event).type == SDL_KEYDOWN)
+		{
+			if ((VEGO_Game().event).key.keysym.scancode == SDL_SCANCODE_RETURN)
+			{
+				std::cout << "Enter pressed > Game start..." << std::endl;
+				break;
+			}
+
+			if ((VEGO_Game().event).key.keysym.scancode == SDL_SCANCODE_ESCAPE)
+			{
+				std::cout << "Escape pressed > Game quit..." << std::endl;
+				hasQuit = true;
+			}
+		}
+	}
+
+	if (hasQuit)
+	{
+		VEGO_Game().setRunning(false);
+		return;
+	}
+
+	if (VEGO_Game().isRunning() == false) return;
+
 }
 
 void chickengame::GameImplementation::selectCharacters(const char* &playerSprite, const char* &enemySprite)
