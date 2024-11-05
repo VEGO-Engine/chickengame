@@ -17,7 +17,8 @@ vego::GameRegistryHelper<chickengame::GameImplementation> this_is_a_variable_so_
 
 void chickengame::GameImplementation::init()
 {
-	this->gameInternal->map->loadMap("assets/SDL_map_test.txt", 25, 20, this->gameInternal, &(chickengame::tiles::tileDictionary));
+	Map::loadMapTmx("assets/grassy-river.tmx");
+	//this->gameInternal->map->loadMap("assets/SDL_map_test.txt", 25, 20, this->gameInternal, &(chickengame::tiles::tileDictionary));
 	chickengame::animations::initialize();
 	Entities::getInstance().initialize(this);
 
