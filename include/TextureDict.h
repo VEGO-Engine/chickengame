@@ -2,16 +2,19 @@
 
 #include <map>
 #include <string>
+
+#include "TextureEnumImplementation.h"
+
 namespace chickengame
 {
 	namespace tiles
 	{
-		const std::map<int, std::pair<std::string, bool>> tileDictionary = {
-			{1, {"assets/water.png", true}},
-			{2, {"assets/dirt.png", false}},
-			{3, {"assets/grass.png", false}},
-			{7, {"assets/grass_water_left.png", false}},
-			{9, {"assets/grass_water_right.png", false}}
+		const std::map<int, std::pair<TexturesEnum, bool>> tileDictionary = {
+			{1, {TexturesEnum::waterTile, true}},
+			{2, {TexturesEnum::dirtTile, false}},
+			{3, {TexturesEnum::grassTile, false}},
+			{7, {TexturesEnum::grassWaterLeftTile, false}},
+			{9, {TexturesEnum::grassWaterRightTile, false}}
 		};
 	}
 }

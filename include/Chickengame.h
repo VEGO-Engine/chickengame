@@ -15,7 +15,7 @@ namespace chickengame
 
 		void init() override;
 		void update() override;
-        void selectCharacters(const char* &playerSprite, const char* &enemySprite);
+        void selectCharacters(TexturesEnum &playerSprite, TexturesEnum &enemySprite);
 		
 		Entities::TeamLabel getWinner() const;
 		void setWinner(Entities::TeamLabel winningTeam);
@@ -30,5 +30,6 @@ namespace chickengame
 		std::vector<Entity*> heartElementsPlayerB;
 		void drawPlayerHealthUI(HealthComponent* playerHealthComponent, std::vector<Entity*>& heartElements, int startCoord, int offset);
 		Entity* createHeartComponents(int locationX) const;
+		void loadTextures();
 	};
 };

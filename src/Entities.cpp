@@ -8,8 +8,8 @@ namespace chickengame {
         this->player1 = &game->gameInternal->manager.addEntity();
         this->player2 = &game->gameInternal->manager.addEntity();
 
-        const char* player1Sprite;
-        const char* player2Sprite;
+        TexturesEnum player1Sprite;
+        TexturesEnum player2Sprite;
 
         game->selectCharacters(player1Sprite, player2Sprite);
 

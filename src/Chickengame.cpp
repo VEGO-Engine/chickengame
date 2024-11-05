@@ -4,6 +4,8 @@
 #include "TextureDict.h"
 #include "Animations.h"
 
+#include "TextureEnumImplementation.h"
+
 #include <iostream>
 #include <vector>
 #include <map>
@@ -17,6 +19,7 @@ vego::GameRegistryHelper<chickengame::GameImplementation> this_is_a_variable_so_
 
 void chickengame::GameImplementation::init()
 {
+	loadTextures();
 	this->gameInternal->map->loadMap("assets/SDL_map_test.txt", 25, 20, this->gameInternal, &(chickengame::tiles::tileDictionary));
 	chickengame::animations::initialize();
 	Entities::getInstance().initialize(this);
@@ -71,8 +74,9 @@ chickengame::Entities::TeamLabel chickengame::GameImplementation::getWinner() co
     return this->winner;
 }
 
-void chickengame::GameImplementation::selectCharacters(const char* &playerSprite, const char* &enemySprite)
+void chickengame::GameImplementation::selectCharacters(TexturesEnum &playerSprite, TexturesEnum &enemySprite)
 {
+	/*
 	// TODO: move this whereever it makes sense (maybe game as a member)
 	std::map<int, std::pair<const char*, const char*>> characterSprites;
 	characterSprites[0] = std::make_pair("assets/chicken_neutral_knight.png", "assets/chicken_knight_spritesheet.png");
@@ -139,7 +143,7 @@ void chickengame::GameImplementation::selectCharacters(const char* &playerSprite
 			}
 		}
 
-		SDL_Texture* backgroundTexture = this->gameInternal->textureManager->loadTexture("assets/characterSelection.png");
+		SDL_Texture* backgroundTexture = this->gameInternal->textureManager->loadTexture(TexturesEnum::charSelection);
 		SDL_RenderClear(this->gameInternal->renderer);
 		SDL_RenderCopy(this->gameInternal->renderer, backgroundTexture, NULL, NULL);
 
@@ -164,6 +168,9 @@ void chickengame::GameImplementation::selectCharacters(const char* &playerSprite
 
 	playerSprite = characterSprites.find(playerSelection)->second.second;
 	enemySprite = characterSprites.find(enemySelection)->second.second;
+	*/
+	playerSprite = TexturesEnum::chickenKnight;
+	enemySprite = TexturesEnum::chickenWizard;
 }
 
 void chickengame::GameImplementation::drawPlayerHealthUI(HealthComponent* playerHealthComponent, std::vector<Entity*>& heartElements, int startCoord, int offset)
@@ -185,7 +192,26 @@ Entity* chickengame::GameImplementation::createHeartComponents(int locationX) co
 {
     auto& heart(this->gameInternal->manager.addEntity());
     heart.addComponent<TransformComponent>(locationX,5,2);
-    heart.addComponent<SpriteComponent>("assets/heart.png");
+    heart.addComponent<SpriteComponent>(TexturesEnum::heart);
     heart.addGroup((size_t)Entity::GroupLabel::HEARTS);
 	return &heart;
+}
+
+void chickengame::GameImplementation::loadTextures() {
+	this->gameInternal->textureManager->addTextures({
+		{TexturesEnum::charSelection, "assets/characterSelection.png"},
+		{TexturesEnum::heart, "assets/heart.png"},
+		{TexturesEnum::egg, "assets/egg.png"},
+		{TexturesEnum::waterTile, "assets/water.png"},
+		{TexturesEnum::grassTile, "assets/grass.png"},
+		{TexturesEnum::dirtTile, "assets/dirt.png"},
+		{TexturesEnum::grassWaterLeftTile, "assets/grass_water_left.png"},
+		{TexturesEnum::grassWaterRightTile, "assets/grass_water_right.png"},
+		{TexturesEnum::heartPowerup, "assets/heart_powerup.png"},
+		{TexturesEnum::msPowerup, "assets/movement_speed_powerup.png"},
+		{TexturesEnum::asPowerup, "assets/atk_speed_powerup.png"},
+		{TexturesEnum::chickenKnight, "assets/chicken_knight_spritesheet.png"},
+		{TexturesEnum::chickenWizard, "assets/chicken_wizard_spritesheet.png"},
+	});
+	std::cout << "Texture-Map created" << std::endl;
 }
