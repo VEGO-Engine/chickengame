@@ -21,8 +21,9 @@ void chickengame::GameImplementation::init()
 {
 	this->startScreen();
 
-	Map::loadMapTmx("assets/grassy-river.tmx");
-	//this->gameInternal->map->loadMap("assets/SDL_map_test.txt", 25, 20, this->gameInternal, &(chickengame::tiles::tileDictionary));
+	Map map("assets/grassy-river.tmx");
+	map.generateTiles();
+	
 	chickengame::animations::initialize();
 	Entities::getInstance().initialize(this);
 
