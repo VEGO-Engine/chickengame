@@ -1,6 +1,7 @@
 #include "Chickengame.h"
 
 #include "Pickupables.h"
+#include "SDL_render.h"
 #include "TextureDict.h"
 #include "Animations.h"
 
@@ -14,6 +15,7 @@
 #include <HealthComponent.h>
 #include <InputComponent.h>
 #include <Map.h>
+#include <VEGO.h>
 
 vego::GameRegistryHelper<chickengame::GameImplementation> this_is_a_variable_so_the_constructor_get_called_without_using_a_define_macro("Chickengame");
 
@@ -21,21 +23,31 @@ void chickengame::GameImplementation::init()
 {
 	loadTextures();
 
+	this->startScreen();
+
 	Map map("assets/grassy-river.tmx");
 	map.generateTiles();
 
-	//this->gameInternal->map->loadMap("assets/SDL_map_test.txt", 25, 20, this->gameInternal, &(chickengame::tiles::tileDictionary));
 	chickengame::animations::initialize();
 	Entities::getInstance().initialize(this);
 
 	this->gameInternal->assets->addSoundEffect("steps", "assets/sound/steps.wav");
 	this->gameInternal->assets->addSoundEffect("throw_egg", "assets/sound/throw_egg.wav");
-
+	
 	std::vector<Entity*>& players = this->gameInternal->manager.getGroup((size_t) Entity::GroupLabel::PLAYERS);
-	playerControllerA = new KeyboardController(&players[0]->getComponent<InputComponent>(), Key::W, Key::S, Key::A, Key::D, Key::E, Vector2D(2, 0));
-	playerControllerB = new KeyboardController(&players[1]->getComponent<InputComponent>(), Key::UP, Key::DOWN, Key::LEFT, Key::RIGHT, Key::RIGHT_CTRL, Vector2D(-2, 0));
+	playerControllerA = std::make_unique<KeyboardController>(
+		&players[0]->getComponent<InputComponent>(),
+		Key::W, Key::S,
+		Key::A, Key::D,
+		Key::E, Vector2D(2, 0)
+	);
+	playerControllerB = std::make_unique<KeyboardController>(
+		&players[1]->getComponent<InputComponent>(),
+		Key::UP, Key::DOWN,
+		Key::LEFT, Key::RIGHT,
+		Key::RIGHT_CTRL, Vector2D(-2, 0)
+	);
 }
-
 
 void chickengame::GameImplementation::update()
 {
@@ -79,15 +91,62 @@ chickengame::Entities::TeamLabel chickengame::GameImplementation::getWinner() co
     return this->winner;
 }
 
+void chickengame::GameImplementation::startScreen()
+{
+	SDL_Texture* backgroundTexture = VEGO_Game().textureManager->loadTexture(Textures::startScreen);
+	SDL_Renderer* renderer = VEGO_Game().renderer;
+
+	SDL_RenderClear(renderer);
+	SDL_RenderCopy(renderer, backgroundTexture, NULL, NULL);
+	SDL_RenderPresent(renderer);
+
+	//SDL_Event event;
+	bool hasQuit = false;
+
+	while (!hasQuit)
+	{
+		SDL_PollEvent(&(VEGO_Game().event));
+
+		if ((VEGO_Game().event).type == SDL_QUIT)
+		{
+			hasQuit = true;
+			break;
+		}
+
+		if ((VEGO_Game().event).type == SDL_KEYDOWN)
+		{
+			if ((VEGO_Game().event).key.keysym.scancode == SDL_SCANCODE_RETURN)
+			{
+				std::cout << "Enter pressed > Game start..." << std::endl;
+				break;
+			}
+
+			if ((VEGO_Game().event).key.keysym.scancode == SDL_SCANCODE_ESCAPE)
+			{
+				std::cout << "Escape pressed > Game quit..." << std::endl;
+				hasQuit = true;
+			}
+		}
+	}
+
+	if (hasQuit)
+	{
+		VEGO_Game().setRunning(false);
+		return;
+	}
+
+	if (VEGO_Game().isRunning() == false) return;
+
+}
+
 void chickengame::GameImplementation::selectCharacters(Textures &playerSprite, Textures &enemySprite)
 {
-	/*
 	// TODO: move this whereever it makes sense (maybe game as a member)
-	std::map<int, std::pair<const char*, const char*>> characterSprites;
-	characterSprites[0] = std::make_pair("assets/chicken_neutral_knight.png", "assets/chicken_knight_spritesheet.png");
-	characterSprites[1] = std::make_pair("assets/chicken_neutral.png", "assets/chicken_spritesheet.png");
-	characterSprites[2] = std::make_pair("assets/chicken_neutral_wizard.png", "assets/chicken_wizard_spritesheet.png");
-	characterSprites[3] = std::make_pair("assets/chicken_neutral_mlady.png", "assets/chicken_mlady_spritesheet.png");
+	std::map<int, std::pair<Textures, Textures>> characterSprites;
+	characterSprites[0] = std::make_pair(Textures::chickenNeutralKnight, Textures::chickenKnight);
+	characterSprites[1] = std::make_pair(Textures::chickenNeutralPessant, Textures::chickenPessant);
+	characterSprites[2] = std::make_pair(Textures::chickenNeutralWizard, Textures::chickenWizard);
+	characterSprites[3] = std::make_pair(Textures::chickenNeutralMLady, Textures::chickenMLady);
 
 	SDL_Rect playerCharacterRects[CHARACTER_COUNT];
 	SDL_Rect enemyCharacterRects[CHARACTER_COUNT];
@@ -96,10 +155,11 @@ void chickengame::GameImplementation::selectCharacters(Textures &playerSprite, T
 	int playerSelection = 0;
 	int enemySelection = 0;
 
+
 	// load textures
 	for (int i = 0; i < CHARACTER_COUNT; ++i)
 	{
-		characterTextures[i] = IMG_LoadTexture(this->gameInternal->renderer, characterSprites.find(i)->second.first);
+		characterTextures[i] = VEGO_Game().textureManager->loadTexture(characterSprites.find(i)->second.first);
 	}
 
 	// set up initial positions for character rects
@@ -173,9 +233,6 @@ void chickengame::GameImplementation::selectCharacters(Textures &playerSprite, T
 
 	playerSprite = characterSprites.find(playerSelection)->second.second;
 	enemySprite = characterSprites.find(enemySelection)->second.second;
-	*/
-	playerSprite = Textures::chickenKnight;
-	enemySprite = Textures::chickenWizard;
 }
 
 void chickengame::GameImplementation::drawPlayerHealthUI(HealthComponent* playerHealthComponent, std::vector<Entity*>& heartElements, int startCoord, int offset)
@@ -217,6 +274,13 @@ void chickengame::GameImplementation::loadTextures() {
 		{Textures::asPowerup, "assets/atk_speed_powerup.png"},
 		{Textures::chickenKnight, "assets/chicken_knight_spritesheet.png"},
 		{Textures::chickenWizard, "assets/chicken_wizard_spritesheet.png"},
+		{Textures::chickenPessant, "assets/chicken_spritesheet.png"},
+		{Textures::chickenMLady, "assets/chicken_mlady_spritesheet.png"},
+		{Textures::chickenNeutralPessant, "assets/chicken_neutral.png"},
+		{Textures::chickenNeutralKnight, "assets/chicken_neutral_knight.png"},
+		{Textures::chickenNeutralWizard, "assets/chicken_neutral_wizard.png"},
+		{Textures::chickenNeutralMLady, "assets/chicken_neutral_mlady.png"},
+		{Textures::startScreen, "assets/startscreen.png"},
 	});
 	std::cout << "Texture-Map created" << std::endl;
 }

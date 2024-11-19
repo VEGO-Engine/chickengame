@@ -14,6 +14,13 @@ enum class Textures {
     heartPowerup,
     msPowerup,
     asPowerup,
+    chickenPessant,
     chickenKnight,
     chickenWizard,
+    chickenMLady,
+    chickenNeutralPessant,
+    chickenNeutralKnight,
+    chickenNeutralWizard,
+    chickenNeutralMLady,
+    startScreen,
 };

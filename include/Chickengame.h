@@ -1,5 +1,7 @@
 #pragma once
 
+#include <memory>
+
 #include <Game.h>
 #include <GameRegistryHelper.h>
 #include <HealthComponent.h>
@@ -17,13 +19,14 @@ namespace chickengame
 		void init() override;
 		void update() override;
         void selectCharacters(Textures &playerSprite, Textures &enemySprite);
-		
+		void startScreen();
+
 		Entities::TeamLabel getWinner() const;
 		void setWinner(Entities::TeamLabel winningTeam);
 
 	private:
-		KeyboardController* playerControllerA;
-		KeyboardController* playerControllerB;
+		std::unique_ptr<KeyboardController> playerControllerA;
+		std::unique_ptr<KeyboardController> playerControllerB;
 		Entities::TeamLabel winner;
 
 		// this is scuffed, but since we are just lousy game devs and no wise engine devs, this is ok
