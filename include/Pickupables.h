@@ -17,11 +17,11 @@ namespace chickengame
         void movementSpeedEffect(Entity* player);
         void atkSpeedEffect(Entity* player);
 
-        static std::vector<std::tuple<std::function<void (Entity*)>, TexturesEnum>> pickupableList =
+        static std::vector<std::tuple<std::function<void (Entity*)>, Textures>> pickupableList =
         {
-            std::make_tuple(chickengame::pickupables::heartEffect, TexturesEnum::heartPowerup),
-            std::make_tuple(chickengame::pickupables::movementSpeedEffect, TexturesEnum::msPowerup),
-            std::make_tuple(chickengame::pickupables::atkSpeedEffect, TexturesEnum::asPowerup)
+            std::make_tuple(chickengame::pickupables::heartEffect, Textures::heartPowerup),
+            std::make_tuple(chickengame::pickupables::movementSpeedEffect, Textures::msPowerup),
+            std::make_tuple(chickengame::pickupables::atkSpeedEffect, Textures::asPowerup)
         };
     }
 }

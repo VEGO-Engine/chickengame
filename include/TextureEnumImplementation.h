@@ -2,7 +2,7 @@
 
 #include <TextureEnumBase.h>
 
-enum class TexturesEnum {
+enum class Textures {
     charSelection,
     heart,
     egg,

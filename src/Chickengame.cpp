@@ -20,17 +20,22 @@ vego::GameRegistryHelper<chickengame::GameImplementation> this_is_a_variable_so_
 void chickengame::GameImplementation::init()
 {
 	loadTextures();
-	this->gameInternal->map->loadMap("assets/SDL_map_test.txt", 25, 20, this->gameInternal, &(chickengame::tiles::tileDictionary));
+
+	Map map("assets/grassy-river.tmx");
+	map.generateTiles();
+
+	//this->gameInternal->map->loadMap("assets/SDL_map_test.txt", 25, 20, this->gameInternal, &(chickengame::tiles::tileDictionary));
 	chickengame::animations::initialize();
 	Entities::getInstance().initialize(this);
 
 	this->gameInternal->assets->addSoundEffect("steps", "assets/sound/steps.wav");
 	this->gameInternal->assets->addSoundEffect("throw_egg", "assets/sound/throw_egg.wav");
-	
+
 	std::vector<Entity*>& players = this->gameInternal->manager.getGroup((size_t) Entity::GroupLabel::PLAYERS);
 	playerControllerA = new KeyboardController(&players[0]->getComponent<InputComponent>(), Key::W, Key::S, Key::A, Key::D, Key::E, Vector2D(2, 0));
 	playerControllerB = new KeyboardController(&players[1]->getComponent<InputComponent>(), Key::UP, Key::DOWN, Key::LEFT, Key::RIGHT, Key::RIGHT_CTRL, Vector2D(-2, 0));
 }
+
 
 void chickengame::GameImplementation::update()
 {
@@ -74,7 +79,7 @@ chickengame::Entities::TeamLabel chickengame::GameImplementation::getWinner() co
     return this->winner;
 }
 
-void chickengame::GameImplementation::selectCharacters(TexturesEnum &playerSprite, TexturesEnum &enemySprite)
+void chickengame::GameImplementation::selectCharacters(Textures &playerSprite, Textures &enemySprite)
 {
 	/*
 	// TODO: move this whereever it makes sense (maybe game as a member)
@@ -143,7 +148,7 @@ void chickengame::GameImplementation::selectCharacters(TexturesEnum &playerSprit
 			}
 		}
 
-		SDL_Texture* backgroundTexture = this->gameInternal->textureManager->loadTexture(TexturesEnum::charSelection);
+		SDL_Texture* backgroundTexture = this->gameInternal->textureManager->loadTexture(Textures::charSelection);
 		SDL_RenderClear(this->gameInternal->renderer);
 		SDL_RenderCopy(this->gameInternal->renderer, backgroundTexture, NULL, NULL);
 
@@ -169,8 +174,8 @@ void chickengame::GameImplementation::selectCharacters(TexturesEnum &playerSprit
 	playerSprite = characterSprites.find(playerSelection)->second.second;
 	enemySprite = characterSprites.find(enemySelection)->second.second;
 	*/
-	playerSprite = TexturesEnum::chickenKnight;
-	enemySprite = TexturesEnum::chickenWizard;
+	playerSprite = Textures::chickenKnight;
+	enemySprite = Textures::chickenWizard;
 }
 
 void chickengame::GameImplementation::drawPlayerHealthUI(HealthComponent* playerHealthComponent, std::vector<Entity*>& heartElements, int startCoord, int offset)
@@ -192,26 +197,26 @@ Entity* chickengame::GameImplementation::createHeartComponents(int locationX) co
 {
     auto& heart(this->gameInternal->manager.addEntity());
     heart.addComponent<TransformComponent>(locationX,5,2);
-    heart.addComponent<SpriteComponent>(TexturesEnum::heart);
+    heart.addComponent<SpriteComponent>(Textures::heart, 10);
     heart.addGroup((size_t)Entity::GroupLabel::HEARTS);
 	return &heart;
 }
 
 void chickengame::GameImplementation::loadTextures() {
 	this->gameInternal->textureManager->addTextures({
-		{TexturesEnum::charSelection, "assets/characterSelection.png"},
-		{TexturesEnum::heart, "assets/heart.png"},
-		{TexturesEnum::egg, "assets/egg.png"},
-		{TexturesEnum::waterTile, "assets/water.png"},
-		{TexturesEnum::grassTile, "assets/grass.png"},
-		{TexturesEnum::dirtTile, "assets/dirt.png"},
-		{TexturesEnum::grassWaterLeftTile, "assets/grass_water_left.png"},
-		{TexturesEnum::grassWaterRightTile, "assets/grass_water_right.png"},
-		{TexturesEnum::heartPowerup, "assets/heart_powerup.png"},
-		{TexturesEnum::msPowerup, "assets/movement_speed_powerup.png"},
-		{TexturesEnum::asPowerup, "assets/atk_speed_powerup.png"},
-		{TexturesEnum::chickenKnight, "assets/chicken_knight_spritesheet.png"},
-		{TexturesEnum::chickenWizard, "assets/chicken_wizard_spritesheet.png"},
+		{Textures::charSelection, "assets/characterSelection.png"},
+		{Textures::heart, "assets/heart.png"},
+		{Textures::egg, "assets/egg.png"},
+		{Textures::waterTile, "assets/water.png"},
+		{Textures::grassTile, "assets/grass.png"},
+		{Textures::dirtTile, "assets/dirt.png"},
+		{Textures::grassWaterLeftTile, "assets/grass_water_left.png"},
+		{Textures::grassWaterRightTile, "assets/grass_water_right.png"},
+		{Textures::heartPowerup, "assets/heart_powerup.png"},
+		{Textures::msPowerup, "assets/movement_speed_powerup.png"},
+		{Textures::asPowerup, "assets/atk_speed_powerup.png"},
+		{Textures::chickenKnight, "assets/chicken_knight_spritesheet.png"},
+		{Textures::chickenWizard, "assets/chicken_wizard_spritesheet.png"},
 	});
 	std::cout << "Texture-Map created" << std::endl;
 }

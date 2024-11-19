@@ -9,12 +9,12 @@ namespace chickengame
 {
 	namespace tiles
 	{
-		const std::map<int, std::pair<TexturesEnum, bool>> tileDictionary = {
-			{1, {TexturesEnum::waterTile, true}},
-			{2, {TexturesEnum::dirtTile, false}},
-			{3, {TexturesEnum::grassTile, false}},
-			{7, {TexturesEnum::grassWaterLeftTile, false}},
-			{9, {TexturesEnum::grassWaterRightTile, false}}
+		const std::map<int, std::pair<Textures, bool>> tileDictionary = {
+			{1, {Textures::waterTile, true}},
+			{2, {Textures::dirtTile, false}},
+			{3, {Textures::grassTile, false}},
+			{7, {Textures::grassWaterLeftTile, false}},
+			{9, {Textures::grassWaterRightTile, false}}
 		};
 	}
 }

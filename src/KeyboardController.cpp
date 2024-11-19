@@ -76,7 +76,7 @@ void KeyboardController::processMovement()
 					1,
 					180,
 					2,
-					TexturesEnum::egg,
+					Textures::egg,
 					m_input->entity
 				);
 			}
@@ -90,7 +90,7 @@ void KeyboardController::processMovement()
 					1,
 					180,
 					2,
-					TexturesEnum::egg,
+					Textures::egg,
 					m_input->entity
 				);
 			}

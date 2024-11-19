@@ -7,6 +7,7 @@
 
 #include "KeyboardController.h"
 #include "Entities.h"
+#include "TextureEnumImplementation.h"
 
 namespace chickengame
 {
@@ -15,7 +16,7 @@ namespace chickengame
 
 		void init() override;
 		void update() override;
-        void selectCharacters(TexturesEnum &playerSprite, TexturesEnum &enemySprite);
+        void selectCharacters(Textures &playerSprite, Textures &enemySprite);
 		
 		Entities::TeamLabel getWinner() const;
 		void setWinner(Entities::TeamLabel winningTeam);
