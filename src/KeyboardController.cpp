@@ -74,7 +74,7 @@ void KeyboardController::processMovement()
 					m_fireVelocity,
 					1,
 					180,
-					2,
+					120,
 					"assets/egg.png",
 					m_input->entity
 				);
@@ -88,7 +88,7 @@ void KeyboardController::processMovement()
 					m_fireVelocity,
 					1,
 					180,
-					2,
+					120,
 					"assets/egg.png",
 					m_input->entity
 				);

@@ -45,12 +45,12 @@ void chickengame::GameImplementation::init()
 	);
 }
 
-void chickengame::GameImplementation::update()
+void chickengame::GameImplementation::update(uint_fast16_t diffTime)
 {
 	playerControllerA->processMovement();
 	playerControllerB->processMovement();
 
-	int powerupSpawn = rand() % 500;
+	int powerupSpawn = rand() % (8000 * (diffTime > 0 ? diffTime : 1));;
 
 	if (powerupSpawn == 0)
 	{
