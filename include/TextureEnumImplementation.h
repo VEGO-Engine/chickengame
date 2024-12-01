@@ -1,7 +1,5 @@
 #pragma once
 
-#include <TextureEnumBase.h>
-
 enum class Textures {
     charSelection,
     heart,
