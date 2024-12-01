@@ -3,6 +3,7 @@
 #include "GameInternal.h"
 #include "AssetManager.h"
 #include "SpriteComponent.h"
+#include "TextureEnumImplementation.h"
 #include "TransformComponent.h"
 
 KeyboardController::KeyboardController(InputComponent* input, Key up, Key down, Key left, Key right, Key fire, Vector2D fireVelocity)
@@ -75,7 +76,7 @@ void KeyboardController::processMovement()
 					1,
 					180,
 					2,
-					"assets/egg.png",
+					Textures::egg,
 					m_input->entity
 				);
 			}
@@ -89,7 +90,7 @@ void KeyboardController::processMovement()
 					1,
 					180,
 					2,
-					"assets/egg.png",
+					Textures::egg,
 					m_input->entity
 				);
 			}

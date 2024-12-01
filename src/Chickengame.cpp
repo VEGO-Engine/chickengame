@@ -5,6 +5,8 @@
 #include "TextureDict.h"
 #include "Animations.h"
 
+#include "TextureEnumImplementation.h"
+
 #include <iostream>
 #include <vector>
 #include <map>
@@ -19,11 +21,13 @@ vego::GameRegistryHelper<chickengame::GameImplementation> this_is_a_variable_so_
 
 void chickengame::GameImplementation::init()
 {
+	loadTextures();
+
 	this->startScreen();
 
 	Map map("assets/grassy-river.tmx");
 	map.generateTiles();
-	
+
 	chickengame::animations::initialize();
 	Entities::getInstance().initialize(this);
 
@@ -89,7 +93,7 @@ chickengame::Entities::TeamLabel chickengame::GameImplementation::getWinner() co
 
 void chickengame::GameImplementation::startScreen()
 {
-	SDL_Texture* backgroundTexture = VEGO_Game().textureManager->loadTexture("assets/startscreen.png");
+	SDL_Texture* backgroundTexture = VEGO_Game().textureManager->loadTexture(Textures::startScreen);
 	SDL_Renderer* renderer = VEGO_Game().renderer;
 
 	SDL_RenderClear(renderer);
@@ -135,14 +139,14 @@ void chickengame::GameImplementation::startScreen()
 
 }
 
-void chickengame::GameImplementation::selectCharacters(const char* &playerSprite, const char* &enemySprite)
+void chickengame::GameImplementation::selectCharacters(Textures &playerSprite, Textures &enemySprite)
 {
 	// TODO: move this whereever it makes sense (maybe game as a member)
-	std::map<int, std::pair<const char*, const char*>> characterSprites;
-	characterSprites[0] = std::make_pair("assets/chicken_neutral_knight.png", "assets/chicken_knight_spritesheet.png");
-	characterSprites[1] = std::make_pair("assets/chicken_neutral.png", "assets/chicken_spritesheet.png");
-	characterSprites[2] = std::make_pair("assets/chicken_neutral_wizard.png", "assets/chicken_wizard_spritesheet.png");
-	characterSprites[3] = std::make_pair("assets/chicken_neutral_mlady.png", "assets/chicken_mlady_spritesheet.png");
+	std::map<int, std::pair<Textures, Textures>> characterSprites;
+	characterSprites[0] = std::make_pair(Textures::chickenNeutralKnight, Textures::chickenKnight);
+	characterSprites[1] = std::make_pair(Textures::chickenNeutralPessant, Textures::chickenPessant);
+	characterSprites[2] = std::make_pair(Textures::chickenNeutralWizard, Textures::chickenWizard);
+	characterSprites[3] = std::make_pair(Textures::chickenNeutralMLady, Textures::chickenMLady);
 
 	SDL_Rect playerCharacterRects[CHARACTER_COUNT];
 	SDL_Rect enemyCharacterRects[CHARACTER_COUNT];
@@ -151,10 +155,11 @@ void chickengame::GameImplementation::selectCharacters(const char* &playerSprite
 	int playerSelection = 0;
 	int enemySelection = 0;
 
+
 	// load textures
 	for (int i = 0; i < CHARACTER_COUNT; ++i)
 	{
-		characterTextures[i] = IMG_LoadTexture(this->gameInternal->renderer, characterSprites.find(i)->second.first);
+		characterTextures[i] = VEGO_Game().textureManager->loadTexture(characterSprites.find(i)->second.first);
 	}
 
 	// set up initial positions for character rects
@@ -203,7 +208,7 @@ void chickengame::GameImplementation::selectCharacters(const char* &playerSprite
 			}
 		}
 
-		SDL_Texture* backgroundTexture = this->gameInternal->textureManager->loadTexture("assets/characterSelection.png");
+		SDL_Texture* backgroundTexture = this->gameInternal->textureManager->loadTexture(Textures::charSelection);
 		SDL_RenderClear(this->gameInternal->renderer);
 		SDL_RenderCopy(this->gameInternal->renderer, backgroundTexture, NULL, NULL);
 
@@ -249,7 +254,33 @@ Entity* chickengame::GameImplementation::createHeartComponents(int locationX) co
 {
     auto& heart(this->gameInternal->manager.addEntity());
     heart.addComponent<TransformComponent>(locationX,5,2);
-    heart.addComponent<SpriteComponent>("assets/heart.png", 10);
+    heart.addComponent<SpriteComponent>(Textures::heart, 10);
     heart.addGroup((size_t)Entity::GroupLabel::HEARTS);
 	return &heart;
+}
+
+void chickengame::GameImplementation::loadTextures() {
+	this->gameInternal->textureManager->addTextures({
+		{Textures::charSelection, "assets/characterSelection.png"},
+		{Textures::heart, "assets/heart.png"},
+		{Textures::egg, "assets/egg.png"},
+		{Textures::waterTile, "assets/water.png"},
+		{Textures::grassTile, "assets/grass.png"},
+		{Textures::dirtTile, "assets/dirt.png"},
+		{Textures::grassWaterLeftTile, "assets/grass_water_left.png"},
+		{Textures::grassWaterRightTile, "assets/grass_water_right.png"},
+		{Textures::heartPowerup, "assets/heart_powerup.png"},
+		{Textures::msPowerup, "assets/movement_speed_powerup.png"},
+		{Textures::asPowerup, "assets/atk_speed_powerup.png"},
+		{Textures::chickenKnight, "assets/chicken_knight_spritesheet.png"},
+		{Textures::chickenWizard, "assets/chicken_wizard_spritesheet.png"},
+		{Textures::chickenPessant, "assets/chicken_spritesheet.png"},
+		{Textures::chickenMLady, "assets/chicken_mlady_spritesheet.png"},
+		{Textures::chickenNeutralPessant, "assets/chicken_neutral.png"},
+		{Textures::chickenNeutralKnight, "assets/chicken_neutral_knight.png"},
+		{Textures::chickenNeutralWizard, "assets/chicken_neutral_wizard.png"},
+		{Textures::chickenNeutralMLady, "assets/chicken_neutral_mlady.png"},
+		{Textures::startScreen, "assets/startscreen.png"},
+	});
+	std::cout << "Texture-Map created" << std::endl;
 }

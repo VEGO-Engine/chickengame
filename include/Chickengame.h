@@ -9,6 +9,7 @@
 
 #include "KeyboardController.h"
 #include "Entities.h"
+#include "TextureEnumImplementation.h"
 
 namespace chickengame
 {
@@ -17,9 +18,9 @@ namespace chickengame
 
 		void init() override;
 		void update() override;
+        void selectCharacters(Textures &playerSprite, Textures &enemySprite);
 		void startScreen();
-        void selectCharacters(const char* &playerSprite, const char* &enemySprite);
-		
+
 		Entities::TeamLabel getWinner() const;
 		void setWinner(Entities::TeamLabel winningTeam);
 
@@ -33,5 +34,6 @@ namespace chickengame
 		std::vector<Entity*> heartElementsPlayerB;
 		void drawPlayerHealthUI(HealthComponent* playerHealthComponent, std::vector<Entity*>& heartElements, int startCoord, int offset);
 		Entity* createHeartComponents(int locationX) const;
+		void loadTextures();
 	};
 };

@@ -8,14 +8,14 @@ namespace chickengame {
         this->player1 = &game->gameInternal->manager.addEntity();
         this->player2 = &game->gameInternal->manager.addEntity();
 
-        const char* player1Sprite;
-        const char* player2Sprite;
+        Textures player1Sprite;
+        Textures player2Sprite;
 
         game->selectCharacters(player1Sprite, player2Sprite);
 
         setTeam(TeamLabel::BLUE, player1);
         this->player1->addComponent<TransformComponent>(80,80,2); //posx, posy, scale
-        this->player1->addComponent<SpriteComponent>(player1Sprite, true, &chickengame::animations::animationMap, "IDLE", 5); //adds sprite (32x32px), path needed
+        this->player1->addComponent<SpriteComponent>(player1Sprite, true, &animations::animationMap, "IDLE", 5); //adds sprite (32x32px), path needed
         this->player1->addComponent<InputComponent>();
         this->player1->addComponent<ColliderComponent>("player", 0.8f); //ad, chickengame::animations::animationMap, "IDLE"ds tag (for further use, reference tag)
         this->player1->addComponent<HealthComponent>(5);
