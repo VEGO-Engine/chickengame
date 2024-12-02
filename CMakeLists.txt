@@ -21,7 +21,7 @@ add_subdirectory(engine)
 target_include_directories(${PROJECT_NAME} PRIVATE ${PROJECT_INCLUDE_DIR})
 
 target_link_libraries(${PROJECT_NAME} PRIVATE
-    SDL2::SDL2main # this fixes compilation issues on windows... but why?
+    #SDL2::SDL2main # this fixes compilation issues on windows... but why?
     engine
 )
 

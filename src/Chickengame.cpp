@@ -1,8 +1,8 @@
 #include "Chickengame.h"
 
 #include "Pickupables.h"
-#include "SDL_render.h"
-#include "TextureDict.h"
+#include "SDL3/SDL_render.h"
+#include "SDL3/SDL_surface.h"
 #include "Animations.h"
 
 #include "TextureEnumImplementation.h"
@@ -49,12 +49,12 @@ void chickengame::GameImplementation::init()
 	);
 }
 
-void chickengame::GameImplementation::update()
+void chickengame::GameImplementation::update(uint_fast16_t diffTime)
 {
 	playerControllerA->processMovement();
 	playerControllerB->processMovement();
 
-	int powerupSpawn = rand() % 500;
+	int powerupSpawn = rand() % (8000 * (diffTime > 0 ? diffTime : 1));;
 
 	if (powerupSpawn == 0)
 	{
@@ -97,7 +97,7 @@ void chickengame::GameImplementation::startScreen()
 	SDL_Renderer* renderer = VEGO_Game().renderer;
 
 	SDL_RenderClear(renderer);
-	SDL_RenderCopy(renderer, backgroundTexture, NULL, NULL);
+	SDL_RenderTexture(renderer, backgroundTexture, NULL, NULL);
 	SDL_RenderPresent(renderer);
 
 	//SDL_Event event;
@@ -107,21 +107,21 @@ void chickengame::GameImplementation::startScreen()
 	{
 		SDL_PollEvent(&(VEGO_Game().event));
 
-		if ((VEGO_Game().event).type == SDL_QUIT)
+		if ((VEGO_Game().event).type == SDL_EVENT_QUIT)
 		{
 			hasQuit = true;
 			break;
 		}
 
-		if ((VEGO_Game().event).type == SDL_KEYDOWN)
+		if ((VEGO_Game().event).type == SDL_EVENT_KEY_DOWN)
 		{
-			if ((VEGO_Game().event).key.keysym.scancode == SDL_SCANCODE_RETURN)
+			if ((VEGO_Game().event).key.scancode == SDL_SCANCODE_RETURN)
 			{
 				std::cout << "Enter pressed > Game start..." << std::endl;
 				break;
 			}
 
-			if ((VEGO_Game().event).key.keysym.scancode == SDL_SCANCODE_ESCAPE)
+			if ((VEGO_Game().event).key.scancode == SDL_SCANCODE_ESCAPE)
 			{
 				std::cout << "Escape pressed > Game quit..." << std::endl;
 				hasQuit = true;
@@ -148,8 +148,8 @@ void chickengame::GameImplementation::selectCharacters(Textures &playerSprite, T
 	characterSprites[2] = std::make_pair(Textures::chickenNeutralWizard, Textures::chickenWizard);
 	characterSprites[3] = std::make_pair(Textures::chickenNeutralMLady, Textures::chickenMLady);
 
-	SDL_Rect playerCharacterRects[CHARACTER_COUNT];
-	SDL_Rect enemyCharacterRects[CHARACTER_COUNT];
+	SDL_FRect playerCharacterRects[CHARACTER_COUNT];
+	SDL_FRect enemyCharacterRects[CHARACTER_COUNT];
 	SDL_Texture* characterTextures[CHARACTER_COUNT];
 
 	int playerSelection = 0;
@@ -163,10 +163,10 @@ void chickengame::GameImplementation::selectCharacters(Textures &playerSprite, T
 	}
 
 	// set up initial positions for character rects
-	for (int i = 0; i < CHARACTER_COUNT; ++i)
+	for (uint8_t i = 0; i < CHARACTER_COUNT; ++i)
 	{
-		playerCharacterRects[i] = { 134 + (i % 2) * 118, 272 + ((i >= 2) ? 114 : 0), 64, 64 };
-		enemyCharacterRects[i] = { 485 + (i % 2) * 118, 273 + ((i >= 2) ? 114 : 0), 64, 64 };
+		playerCharacterRects[i] = { static_cast<float>(134 + (i % 2) * 118), static_cast<float>(272 + ((i >= 2) ? 114 : 0)), 64, 64 };
+		enemyCharacterRects[i] = { static_cast<float>(485 + (i % 2) * 118), static_cast<float>(273 + ((i >= 2) ? 114 : 0)), 64, 64 };
 	}
 
 	bool hasQuit = false;
@@ -175,19 +175,19 @@ void chickengame::GameImplementation::selectCharacters(Textures &playerSprite, T
 	{
 		SDL_PollEvent(&this->gameInternal->event);
 
-		if (this->gameInternal->event.type == SDL_QUIT)
+		if (this->gameInternal->event.type == SDL_EVENT_QUIT)
 		{
 			hasQuit = true;
 		}
 
-		if (this->gameInternal->event.type == SDL_KEYDOWN)
+		if (this->gameInternal->event.type == SDL_EVENT_KEY_DOWN)
 		{
-			if (this->gameInternal->event.key.keysym.scancode == SDL_SCANCODE_RETURN)
+			if (this->gameInternal->event.key.scancode == SDL_SCANCODE_RETURN)
 			{
 				break;
 			}
 
-			switch (this->gameInternal->event.key.keysym.scancode)
+			switch (this->gameInternal->event.key.scancode)
 			{
 			case SDL_SCANCODE_A:
 				playerSelection = (playerSelection - 1 + CHARACTER_COUNT) % CHARACTER_COUNT;
@@ -208,21 +208,21 @@ void chickengame::GameImplementation::selectCharacters(Textures &playerSprite, T
 			}
 		}
 
-		SDL_Texture* backgroundTexture = this->gameInternal->textureManager->loadTexture(Textures::charSelection);
-		SDL_RenderClear(this->gameInternal->renderer);
-		SDL_RenderCopy(this->gameInternal->renderer, backgroundTexture, NULL, NULL);
+		SDL_Texture* backgroundTexture = VEGO_Game().textureManager->loadTexture(Textures::charSelection);
+		SDL_RenderClear(VEGO_Game().renderer);
+		SDL_RenderTexture(VEGO_Game().renderer, backgroundTexture, NULL, NULL);
 
 		for (int i = 0; i < CHARACTER_COUNT; ++i)
 		{
-			SDL_RenderCopy(this->gameInternal->renderer, characterTextures[i], nullptr, &playerCharacterRects[i]);
-			SDL_RenderCopy(this->gameInternal->renderer, characterTextures[i], nullptr, &enemyCharacterRects[i]);
+			SDL_RenderTexture(VEGO_Game().renderer, characterTextures[i], nullptr, &playerCharacterRects[i]);
+			SDL_RenderTexture(VEGO_Game().renderer, characterTextures[i], nullptr, &enemyCharacterRects[i]);
 		}
 
-		SDL_SetRenderDrawColor(this->gameInternal->renderer, 0, 255, 0, 255);
-		SDL_RenderDrawRect(this->gameInternal->renderer, &playerCharacterRects[playerSelection]);
-		SDL_RenderDrawRect(this->gameInternal->renderer, &enemyCharacterRects[enemySelection]);
+		SDL_SetRenderDrawColor(VEGO_Game().renderer, 0, 255, 0, 255);
+		SDL_RenderRect(VEGO_Game().renderer, &playerCharacterRects[playerSelection]);
+		SDL_RenderRect(VEGO_Game().renderer, &enemyCharacterRects[enemySelection]);
 
-		SDL_RenderPresent(this->gameInternal->renderer);
+		SDL_RenderPresent(VEGO_Game().renderer);
 	}
 
 	if (hasQuit)

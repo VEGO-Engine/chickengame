@@ -11,7 +11,7 @@ void chickengame::pickupables::heartEffect(Entity* player)
 
 void chickengame::pickupables::movementSpeedEffect(Entity* player)
 {
-    player->getComponent<StatEffectsComponent>().modifyStatDur(Stats::MOVEMENT_SPEED, BUFF_DURATION, BUFF_VALUE);
+    player->getComponent<StatEffectsComponent>().modifyStatDur(Stats::MOVEMENT_SPEED, BUFF_DURATION, BUFF_VALUE * 60); // scale uniform "BUFF_VALUE" to appropriate range
 }
 
 void chickengame::pickupables::atkSpeedEffect(Entity* player)

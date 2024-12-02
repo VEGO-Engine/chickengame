@@ -75,7 +75,7 @@ void KeyboardController::processMovement()
 					m_fireVelocity,
 					1,
 					180,
-					2,
+					120,
 					Textures::egg,
 					m_input->entity
 				);
@@ -89,7 +89,7 @@ void KeyboardController::processMovement()
 					m_fireVelocity,
 					1,
 					180,
-					2,
+					120,
 					Textures::egg,
 					m_input->entity
 				);

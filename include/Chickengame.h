@@ -17,7 +17,7 @@ namespace chickengame
 	public:
 
 		void init() override;
-		void update() override;
+		void update(uint_fast16_t diffTime) override;
         void selectCharacters(Textures &playerSprite, Textures &enemySprite);
 		void startScreen();
 
