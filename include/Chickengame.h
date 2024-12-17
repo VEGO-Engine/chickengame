@@ -23,7 +23,7 @@ namespace chickengame
 
 		Entities::TeamLabel getWinner() const;
 		void setWinner(Entities::TeamLabel winningTeam);
-		std::optional<std::string> getConfigFilePath() override;
+		std::optional<std::string> setConfigFilePath() override;
 
 	private:
 		std::unique_ptr<KeyboardController> playerControllerA;

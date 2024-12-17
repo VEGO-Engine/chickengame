@@ -86,7 +86,7 @@ void chickengame::GameImplementation::setWinner(Entities::TeamLabel winningTeam)
 	this->gameInternal->stopGame();
 }
 
-std::optional<std::string> chickengame::GameImplementation::getConfigFilePath() {
+std::optional<std::string> chickengame::GameImplementation::setConfigFilePath() {
 	return std::optional<std::string>("./configs/mainConfig.json");
 }
 
