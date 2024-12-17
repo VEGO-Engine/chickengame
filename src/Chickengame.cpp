@@ -41,8 +41,9 @@ void chickengame::GameImplementation::update()
 		int pickupableType = rand() % chickengame::pickupables::pickupableList.size();
 		std::tuple pickupable = chickengame::pickupables::pickupableList.at(pickupableType);
 		// gen rand tuple
+
 		this->gameInternal->assets->createPowerup(
-			this->gameInternal->assets->calculateSpawnPosition(32, 32),
+			this->gameInternal->assets->calculateSpawnPosition({32, 32}, {SCREEN_SIZE_WIDTH, SCREEN_SIZE_HEIGHT}),
 			std::get<0>(pickupable), // tuple[0] function
 			std::get<1>(pickupable) // tuple[1] texture
 		);
