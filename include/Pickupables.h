@@ -3,6 +3,7 @@
 #include <tuple>
 #include <Entity.h>
 #include <functional>
+#include <KeyboardController.h>
 
 #include "TextureEnumImplementation.h"
 
@@ -10,8 +11,7 @@ namespace chickengame
 {
     namespace pickupables
     {
-        constexpr int BUFF_DURATION = 4000; // milliseconds
-        constexpr int BUFF_VALUE = 1;
+        constexpr int BUFF_DURATION = 3000; // milliseconds
 
         void heartEffect(Entity* player);
         void movementSpeedEffect(Entity* player);
