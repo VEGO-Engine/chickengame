@@ -86,6 +86,10 @@ void chickengame::GameImplementation::setWinner(Entities::TeamLabel winningTeam)
 	this->gameInternal->stopGame();
 }
 
+std::optional<std::string> chickengame::GameImplementation::setConfigFilePath() {
+	return std::optional<std::string>("./configs/mainConfig.json");
+}
+
 chickengame::Entities::TeamLabel chickengame::GameImplementation::getWinner() const
 {
     return this->winner;
@@ -284,3 +288,4 @@ void chickengame::GameImplementation::loadTextures() {
 	});
 	std::cout << "Texture-Map created" << std::endl;
 }
+
