@@ -36,5 +36,6 @@ namespace chickengame
 		void drawPlayerHealthUI(HealthComponent* playerHealthComponent, std::vector<Entity*>& heartElements, int startCoord, int offset);
 		Entity* createHeartComponents(int locationX) const;
 		void loadTextures();
+		void loadSoundEffects();
 	};
 };

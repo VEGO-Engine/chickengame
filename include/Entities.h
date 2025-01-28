@@ -13,6 +13,7 @@
 #include "TransformComponent.h"
 #include "DataComponent.h"
 #include "Animations.h"
+#include "SoundEffects.h"
 #include "StatImplementation.h"
 
 namespace chickengame
@@ -66,7 +67,7 @@ namespace chickengame
         }
 
         void initialize(GameImplementation* game);
-        static void createProjectile(Vector2D pos, Vector2D velocity, int scale, int range, int speed, Textures textureEnum, Entity* owner);
+        static void createProjectile(Vector2D pos, Vector2D velocity, int scale, int range, int speed, Textures textureEnum, Entity* owner, SoundEffects soundEffect);
 
         Entity* getPlayer1() { return this->player1; };
         Entity* getPlayer2() { return this->player2; };
