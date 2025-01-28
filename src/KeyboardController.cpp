@@ -2,6 +2,7 @@
 
 #include "GameInternal.h"
 #include "AssetManager.h"
+#include "MusicAndSoundImplementation.h"
 #include "SpriteComponent.h"
 #include "TextureEnumImplementation.h"
 #include "TransformComponent.h"
@@ -30,7 +31,7 @@ void KeyboardController::processMovement()
 		m_transform->direction.x = -1;
 		m_sprite->playAnimation("WALK");
 		m_sprite->setDirection(Direction::LEFT);
-		SoundManager::playSound(m_input->entity->getManager().getGame(), "steps", false, PLAY_ONCE, MAX_VOLUME, 1);
+		SoundManager::playSound(SoundEffects::steps, false, PLAY_ONCE, MAX_VOLUME, 1);
 	}
 
 	if (m_input->isKeyDown(m_right))
@@ -38,21 +39,21 @@ void KeyboardController::processMovement()
 		m_transform->direction.x = 1;
 		m_sprite->playAnimation("WALK");
 		m_sprite->setDirection(Direction::RIGHT);
-		SoundManager::playSound(m_input->entity->getManager().getGame(), "steps", false, PLAY_ONCE, MAX_VOLUME, 1);
+		SoundManager::playSound(SoundEffects::steps, false, PLAY_ONCE, MAX_VOLUME, 1);
 	}
 
 	if (m_input->isKeyDown(m_up))
 	{
 		m_transform->direction.y = -1;
 		m_sprite->playAnimation("WALK");
-		SoundManager::playSound(m_input->entity->getManager().getGame(), "steps", false, PLAY_ONCE, MAX_VOLUME, 1);
+		SoundManager::playSound(SoundEffects::steps, false, PLAY_ONCE, MAX_VOLUME, 1);
 	}
 
 	if (m_input->isKeyDown(m_down))
 	{
 		m_transform->direction.y = 1;
 		m_sprite->playAnimation("WALK");
-		SoundManager::playSound(m_input->entity->getManager().getGame(), "steps", false, PLAY_ONCE, MAX_VOLUME, 1);
+		SoundManager::playSound(SoundEffects::steps, false, PLAY_ONCE, MAX_VOLUME, 1);
 	}
 
 	if (m_input->isKeyDown(m_fire))
@@ -77,7 +78,8 @@ void KeyboardController::processMovement()
 					180,
 					120,
 					Textures::egg,
-					m_input->entity
+					m_input->entity,
+					SoundEffects::eggThrow
 				);
 			}
 
@@ -91,7 +93,8 @@ void KeyboardController::processMovement()
 					180,
 					120,
 					Textures::egg,
-					m_input->entity
+					m_input->entity,
+					SoundEffects::eggThrow
 				);
 			}
 

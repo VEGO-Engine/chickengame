@@ -14,6 +14,7 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 file(GLOB_RECURSE SOURCES ${PROJECT_SOURCE_DIR}/src/*.cpp)
 add_executable(${PROJECT_NAME} ${SOURCES}
         include/TextureEnumImplementation.h
+        include/MusicAndSoundImplementation.h
 )
 
 add_subdirectory(engine)

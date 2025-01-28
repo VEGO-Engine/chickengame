@@ -17,11 +17,14 @@
 #include <Map.h>
 #include <VEGO.h>
 
+#include "MusicAndSoundImplementation.h"
+
 vego::GameRegistryHelper<chickengame::GameImplementation> this_is_a_variable_so_the_constructor_get_called_without_using_a_define_macro("Chickengame");
 
 void chickengame::GameImplementation::init()
 {
 	loadTextures();
+	loadSoundEffects();
 
 	this->startScreen();
 
@@ -30,9 +33,6 @@ void chickengame::GameImplementation::init()
 
 	chickengame::animations::initialize();
 	Entities::getInstance().initialize(this);
-
-	this->gameInternal->assets->addSoundEffect("steps", "assets/sound/steps.wav");
-	this->gameInternal->assets->addSoundEffect("throw_egg", "assets/sound/throw_egg.wav");
 	
 	std::vector<Entity*>& players = this->gameInternal->manager.getGroup((size_t) Entity::GroupLabel::PLAYERS);
 	playerControllerA = std::make_unique<KeyboardController>(
@@ -288,4 +288,13 @@ void chickengame::GameImplementation::loadTextures() {
 	});
 	std::cout << "Texture-Map created" << std::endl;
 }
+
+void chickengame::GameImplementation::loadSoundEffects() {
+	this->gameInternal->soundManager->getInstance()->addSoundEffects({
+		{SoundEffects::eggThrow, "assets/sound/throw_egg.wav"},
+		{SoundEffects::steps, "assets/sound/steps.wav"}
+	});
+	std::cout << "SoundEffects-Map created" << std::endl;
+}
+
 
