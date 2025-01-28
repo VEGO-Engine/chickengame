@@ -11,7 +11,9 @@
 #include "StatEffectsComponent.h"
 #include "HealthComponent.h"
 #include "TransformComponent.h"
+#include "DataComponent.h"
 #include "Animations.h"
+#include "StatImplementation.h"
 
 namespace chickengame
 {
@@ -64,6 +66,7 @@ namespace chickengame
         }
 
         void initialize(GameImplementation* game);
+        static void createProjectile(Vector2D pos, Vector2D velocity, int scale, int range, int speed, const char* texturePath, Entity* owner);
 
         Entity* getPlayer1() { return this->player1; };
         Entity* getPlayer2() { return this->player2; };

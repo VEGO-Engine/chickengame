@@ -3,13 +3,13 @@
 #include <tuple>
 #include <Entity.h>
 #include <functional>
+#include <KeyboardController.h>
 
 namespace chickengame
 {
     namespace pickupables
     {
-        constexpr int BUFF_DURATION = 240;
-        constexpr int BUFF_VALUE = 1;
+        constexpr int BUFF_DURATION = 3000;
 
         void heartEffect(Entity* player);
         void movementSpeedEffect(Entity* player);

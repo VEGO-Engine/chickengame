@@ -4,102 +4,101 @@
 #include "AssetManager.h"
 #include "SpriteComponent.h"
 #include "TransformComponent.h"
+#include "Entities.h"
+#include <DataComponent.h>
 
 KeyboardController::KeyboardController(InputComponent* input, Key up, Key down, Key left, Key right, Key fire, Vector2D fireVelocity)
-    : m_input(input), m_up(up), m_down(down), m_left(left), m_right(right), m_fire(fire), m_fireVelocity(fireVelocity)
+    : input(input), up(up), down(down), left(left), right(right), fire(fire), fireVelocity(fireVelocity)
 {
-	m_sprite = &m_input->entity->getComponent<SpriteComponent>();
-	m_transform = &m_input->entity->getComponent<TransformComponent>();
+	sprite = &input->entity->getComponent<SpriteComponent>();
+	transform = &input->entity->getComponent<TransformComponent>();
 }
 
 // void KeyboardController::init()
 // {
-// 	m_sprite = &m_input->entity->getComponent<SpriteComponent>();
-// 	m_transform = &m_input->entity->getComponent<TransformComponent>();
+// 	sprite = &input->entity->getComponent<SpriteComponent>();
+// 	transform = &input->entity->getComponent<TransformComponent>();
 // }
 
 void KeyboardController::processMovement()
 {
-	m_transform->direction.x = 0;
-	m_transform->direction.y = 0;
-	m_sprite->playAnimation("IDLE");
+	transform->direction.x = 0;
+	transform->direction.y = 0;
+	sprite->playAnimation("IDLE");
 
-	if (m_input->isKeyDown(m_left))
+	if (input->isKeyDown(left))
 	{
-		m_transform->direction.x = -1;
-		m_sprite->playAnimation("WALK");
-		m_sprite->setDirection(Direction::LEFT);
-		SoundManager::playSound(m_input->entity->getManager().getGame(), "steps", false, PLAY_ONCE, MAX_VOLUME, 1);
+		transform->direction.x = -1;
+		sprite->playAnimation("WALK");
+		sprite->setDirection(Direction::LEFT);
+		SoundManager::playSound(input->entity->getManager().getGame(), "steps", false, PLAY_ONCE, MAX_VOLUME, 1);
 	}
 
-	if (m_input->isKeyDown(m_right))
+	if (input->isKeyDown(right))
 	{
-		m_transform->direction.x = 1;
-		m_sprite->playAnimation("WALK");
-		m_sprite->setDirection(Direction::RIGHT);
-		SoundManager::playSound(m_input->entity->getManager().getGame(), "steps", false, PLAY_ONCE, MAX_VOLUME, 1);
+		transform->direction.x = 1;
+		sprite->playAnimation("WALK");
+		sprite->setDirection(Direction::RIGHT);
+		SoundManager::playSound(input->entity->getManager().getGame(), "steps", false, PLAY_ONCE, MAX_VOLUME, 1);
 	}
 
-	if (m_input->isKeyDown(m_up))
+	if (input->isKeyDown(up))
 	{
-		m_transform->direction.y = -1;
-		m_sprite->playAnimation("WALK");
-		SoundManager::playSound(m_input->entity->getManager().getGame(), "steps", false, PLAY_ONCE, MAX_VOLUME, 1);
+		transform->direction.y = -1;
+		sprite->playAnimation("WALK");
+		SoundManager::playSound(input->entity->getManager().getGame(), "steps", false, PLAY_ONCE, MAX_VOLUME, 1);
 	}
 
-	if (m_input->isKeyDown(m_down))
+	if (input->isKeyDown(down))
 	{
-		m_transform->direction.y = 1;
-		m_sprite->playAnimation("WALK");
-		SoundManager::playSound(m_input->entity->getManager().getGame(), "steps", false, PLAY_ONCE, MAX_VOLUME, 1);
+		transform->direction.y = 1;
+		sprite->playAnimation("WALK");
+		SoundManager::playSound(input->entity->getManager().getGame(), "steps", false, PLAY_ONCE, MAX_VOLUME, 1);
 	}
 
-	if (m_input->isKeyDown(m_fire))
+	if (input->isKeyDown(fire))
 	{
 		Uint32 currentTicks = SDL_GetTicks();
 
-		if (currentTicks - m_lastFireTime >= m_fireCooldown)
+		if (currentTicks - lastFireTime >= (this->input->entity->hasComponent<DataComponent>()
+			? this->input->entity->getComponent<DataComponent>().getEntry<int>("fireCooldown").value_or(INT_MAX)
+			: INT_MAX))
 		{
+			lastFireTime = currentTicks;
 
-			// m_player is a missleading name for a component
-			m_player = &m_input->entity->getComponent<TransformComponent>();
+			// player is a missleading name for a component
+			player = &input->entity->getComponent<TransformComponent>();
 
 			//checks player source via the firing velocity
 			//TODO: adding actual projectile textures
-			if (m_fireVelocity.x > 0)
+			if (fireVelocity.x > 0)
 			{
-				m_sprite->setDirection(Direction::RIGHT);
-				m_input->entity->getManager().getGame()->assets->createProjectile(
-					Vector2D(m_player->position.x, m_player->position.y),
-					m_fireVelocity,
+				sprite->setDirection(Direction::RIGHT);
+				chickengame::Entities::createProjectile(
+					Vector2D(player->position.x, player->position.y),
+					fireVelocity,
 					1,
 					180,
 					2,
 					"assets/egg.png",
-					m_input->entity
+					input->entity
 				);
 			}
 
 			else
 			{
-				m_sprite->setDirection(Direction::LEFT);
-				m_input->entity->getManager().getGame()->assets->createProjectile(
-					Vector2D(m_player->position.x, m_player->position.y),
-					m_fireVelocity,
+				sprite->setDirection(Direction::LEFT);
+				chickengame::Entities::createProjectile(
+					Vector2D(player->position.x, player->position.y),
+					fireVelocity,
 					1,
 					180,
 					2,
 					"assets/egg.png",
-					m_input->entity
+					input->entity
 				);
 			}
 
-			m_lastFireTime = currentTicks;
 		}
 	}
-}
-
-void KeyboardController::modifyAtkSpeed(int8_t modifier)
-{
-	this->m_fireCooldown -= modifier * 400;
 }
