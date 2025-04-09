@@ -3,7 +3,7 @@
 #include <tuple>
 #include <Entity.h>
 #include <functional>
-#include <KeyboardController.h>
+#include <Controls.h>
 
 #include "TextureEnumImplementation.h"
 

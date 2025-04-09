@@ -18,6 +18,7 @@
 #include <VEGO.h>
 
 #include "MusicAndSoundImplementation.h"
+#include "Controls.h"
 
 vego::GameRegistryHelper<chickengame::GameImplementation> this_is_a_variable_so_the_constructor_get_called_without_using_a_define_macro("Chickengame");
 
@@ -33,106 +34,15 @@ void chickengame::GameImplementation::init()
 
 	chickengame::animations::initialize();
 	Entities::getInstance().initialize(this);
-
-	VEGO_Game().assets->addSoundEffect("steps", "assets/sound/steps.wav");
-	VEGO_Game().assets->addSoundEffect("throw_egg", "assets/sound/throw_egg.wav");
-
+	
 	std::vector<Entity*>& players = VEGO_Game().manager.getGroup((size_t) Entity::GroupLabel::PLAYERS);
-	// playerControllerA = std::make_unique<KeyboardController>(
-	// 	&players[0]->getComponent<InputComponent>(),
-	// 	Key::W, Key::S,
-	// 	Key::A, Key::D,
-	// 	Key::E, Vector2D(2, 0)
-	// );
-	// playerControllerB = std::make_unique<KeyboardController>(
-	// 	&players[1]->getComponent<InputComponent>(),
-	// 	Key::UP, Key::DOWN,
-	// 	Key::LEFT, Key::RIGHT,
-	// 	Key::RIGHT_CTRL, Vector2D(-2, 0)
-	// );
-
-
-
-
-	// InputManager Test
-	VEGO_Game().inputManager->registerAction("Jump", {InputManager::Key::SPACE}, []() {
-		std::cout << "Jump action triggered!" << std::endl;
-	}, "Default");
-
-	VEGO_Game().inputManager->registerAction("WalkLeft", {InputManager::Key::A, InputManager::Key::LEFT}, [players]() {
-		std::cout << "Walk Left action triggered!" << std::endl;
-
-		players[0]->getComponent<InputComponent>().entity->getComponent<TransformComponent>().direction.x = -1;
-		players[0]->getComponent<InputComponent>().entity->getComponent<SpriteComponent>().playAnimation("WALK");
-		players[0]->getComponent<InputComponent>().entity->getComponent<SpriteComponent>().setDirection(Direction::LEFT);
-		SoundManager::playSound(players[0]->getComponent<InputComponent>().entity->getManager().getGame(), "steps", false, PLAY_ONCE, MAX_VOLUME, 1);
-	}, "Gameplay");
-
-	VEGO_Game().inputManager->registerAction("WalkRight", {InputManager::Key::D, InputManager::Key::RIGHT}, [players]() {
-		std::cout << "Walk Right action triggered!" << std::endl;
-
-		players[0]->getComponent<InputComponent>().entity->getComponent<TransformComponent>().direction.x = 1;
-		players[0]->getComponent<InputComponent>().entity->getComponent<SpriteComponent>().playAnimation("WALK");
-		players[0]->getComponent<InputComponent>().entity->getComponent<SpriteComponent>().setDirection(Direction::RIGHT);
-		SoundManager::playSound(players[0]->getComponent<InputComponent>().entity->getManager().getGame(), "steps", false, PLAY_ONCE, MAX_VOLUME, 1);
-	}, "Gameplay");
-
-	// Test context switching
-	VEGO_Game().inputManager->registerAction("SwitchToGameplay", {InputManager::Key::TAB}, []() {
-		VEGO_Game().inputManager->setActiveContext("Gameplay");
-	}, "Default");
-
-	VEGO_Game().inputManager->registerAction("SwitchToDefault", {InputManager::Key::TAB}, []() {
-		VEGO_Game().inputManager->setActiveContext("Default");
-	}, "Gameplay");
-
-	// Test rebinding
-	VEGO_Game().inputManager->registerAction("RebindJumpToJ", {InputManager::Key::B}, []() {
-		VEGO_Game().inputManager->rebindAction("Jump", {InputManager::Key::J}, "Default");
-	}, "Default");
-
-	VEGO_Game().inputManager->registerAction("GetJumpBinding", {InputManager::Key::G}, []() {
-		auto binding = VEGO_Game().inputManager->getBindings("Jump", "Default");
-		std::cout << "Jump binding(s): ";
-		for (auto key : binding) {
-			std::cout << key << " ";
-		}
-		std::cout << std::endl;
-	}, "Default");
-
-	VEGO_Game().inputManager->registerAction("FooBar1", {InputManager::Key::SPACE}, []() {}, "Default");
-	VEGO_Game().inputManager->registerAction("FooBar2", {InputManager::Key::SPACE}, []() {}, "Default");
-	VEGO_Game().inputManager->registerAction("FooBar3", {InputManager::Key::SPACE}, []() {}, "Default");
-
-	VEGO_Game().inputManager->registerAction("GetActionsForSpace", {InputManager::Key::Q}, []() {
-		auto actions = VEGO_Game().inputManager->getActionsByKey(InputManager::Key::SPACE);
-		// std::cout << actions << std::endl; // didnt wanna work for some reason
-		for (auto action : actions) { // also doesnt wanna work??? (im probably missing something real obvious)
-			std::cout << action << std::endl;
-		}
-	}, "Default");
-
-	VEGO_Game().inputManager->registerAction("GetActionsForJ", {InputManager::Key::Q}, []() {
-		auto actions = VEGO_Game().inputManager->getActionsByKey(InputManager::Key::J);
-		std::cout << actions << std::endl;
-	}, "Default");
-
-	VEGO_Game().inputManager->registerAction("RemoveJumpBinding", {InputManager::Key::R}, []() {
-		VEGO_Game().inputManager->removeBindings("Jump", "Default");
-	}, "Default");
-
-	VEGO_Game().inputManager->registerAction("TestPrintActionSg", {InputManager::Key::P}, []() {
-		auto actions = VEGO_Game().inputManager->getActionsByKey(InputManager::Key::R);
-		std::cout << actions[0] << std::endl;
-	}, "Default");
-
+	Controls::initControls(players);
+	VEGO_Game().interactionManager->registerListener(this->consoleListener);
+	
 }
 
 void chickengame::GameImplementation::update(uint_fast16_t diffTime)
 {
-	// playerControllerA->processMovement();
-	// playerControllerB->processMovement();
-
 	int powerupSpawn = rand() % (8000 * (diffTime > 0 ? diffTime : 1));;
 
 	if (powerupSpawn == 0)
@@ -149,6 +59,11 @@ void chickengame::GameImplementation::update(uint_fast16_t diffTime)
 
 	for (auto& player : VEGO_Game().manager.getGroup((size_t) Entity::GroupLabel::PLAYERS))
 	{
+		if (player->getComponent<TransformComponent>().direction.x == 0 
+		&& player->getComponent<TransformComponent>().direction.y == 0)
+		{
+			player->getComponent<SpriteComponent>().playAnimation("IDLE");
+		}
 		if (player->getComponent<HealthComponent>().getHealth() <= 0)
 		{
 			this->setWinner(Entities::getInstance().getTeam(player));

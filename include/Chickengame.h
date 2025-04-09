@@ -7,9 +7,10 @@
 #include <HealthComponent.h>
 #include <Entity.h>
 
-#include "KeyboardController.h"
+#include "Controls.h"
 #include "Entities.h"
 #include "TextureEnumImplementation.h"
+#include "ConsoleListener.h"
 
 namespace chickengame
 {
@@ -26,8 +27,6 @@ namespace chickengame
 		std::optional<std::string> setConfigFilePath() override;
 
 	private:
-		std::unique_ptr<KeyboardController> playerControllerA;
-		std::unique_ptr<KeyboardController> playerControllerB;
 		Entities::TeamLabel winner;
 
 		// this is scuffed, but since we are just lousy game devs and no wise engine devs, this is ok
@@ -37,5 +36,7 @@ namespace chickengame
 		Entity* createHeartComponents(int locationX) const;
 		void loadTextures();
 		void loadSoundEffects();
+
+		std::shared_ptr<ConsoleListener> consoleListener = std::make_shared<ConsoleListener>();
 	};
 };

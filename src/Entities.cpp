@@ -4,6 +4,7 @@
 
 #include <VEGO.h>
 #include <ProjectileComponent.h>
+#include <InteractionComponent.h>
 
 namespace chickengame {
     void Entities::initialize(GameImplementation* game)
@@ -26,8 +27,7 @@ namespace chickengame {
         this->player1->addComponent<HealthComponent>(5);
         this->player1->addComponent<StatEffectsComponent>();
         this->player1->addGroup((size_t) Entity::GroupLabel::PLAYERS); //tell programm what group it belongs to for rendering order
-
-
+        
         setTeam(TeamLabel::RED, this->player2);
         this->player2->addComponent<DataComponent>();
         addDefaultPlayerStats(this->player2);
@@ -37,6 +37,15 @@ namespace chickengame {
         this->player2->addComponent<ColliderComponent>("enemy", 0.8f);
         this->player2->addComponent<HealthComponent>(5);
         this->player2->addComponent<StatEffectsComponent>();
+        /// @author ChatGPT
+        /*this->player2->addComponent<InteractionComponent>([this](void* actor, void* data) {
+            if (actor == this->player1) {
+                ((Entity*)this->player1)->getComponent<StatEffectsComponent>().addEffect(1000, [this]() {
+                    this->player1->getComponent<StatEffectsComponent>().removeEffect();
+                });
+            }
+        });*/
+        
         this->player2->addGroup((size_t) Entity::GroupLabel::PLAYERS);
     }
 
