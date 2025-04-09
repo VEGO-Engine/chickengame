@@ -11,7 +11,6 @@
 #include <vector>
 #include <map>
 #include <GameInternal.h>
-#include <AssetManager.h>
 #include <HealthComponent.h>
 #include <InputComponent.h>
 #include <Map.h>
@@ -61,8 +60,8 @@ void chickengame::GameImplementation::update(uint_fast16_t diffTime)
 		int pickupableType = rand() % chickengame::pickupables::pickupableList.size();
 		std::tuple pickupable = chickengame::pickupables::pickupableList.at(pickupableType);
 		// gen rand tuple
-		this->gameInternal->assets->createPowerup(
-			this->gameInternal->assets->calculateSpawnPosition(),
+		VEGO_Game().pickupManager->createPowerup(
+			VEGO_Game().pickupManager->calculateSpawnPosition(),
 			std::get<0>(pickupable), // tuple[0] function
 			std::get<1>(pickupable) // tuple[1] texture
 		);
