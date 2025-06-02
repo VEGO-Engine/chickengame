@@ -3,7 +3,7 @@
 #include <memory>
 
 #include <Game.h>
-#include <GameRegistryHelper.h>
+#include <GameRegistrar.h>
 #include <HealthComponent.h>
 #include <Entity.h>
 
@@ -14,6 +14,9 @@
 
 namespace chickengame
 {
+	class GameImplementation;
+	static vego::GameRegistrar<GameImplementation> game_registrar;
+	
 	class GameImplementation : public Game { // name pending
 	public:
 
