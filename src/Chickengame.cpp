@@ -19,8 +19,6 @@
 #include "MusicAndSoundImplementation.h"
 #include "Controls.h"
 
-vego::GameRegistryHelper<chickengame::GameImplementation> this_is_a_variable_so_the_constructor_get_called_without_using_a_define_macro("Chickengame");
-
 void chickengame::GameImplementation::init()
 {
 	loadTextures();
